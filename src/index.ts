@@ -170,8 +170,11 @@ function draw (): void {
   if (g === null) throw new Error('Cannot find the GameCanvas')
 
   g.clearRect(0, 0, canvas.width, canvas.height)
+  drawMap(g)
+  drawPlayer(g)
+}
 
-  // Draw map
+function drawMap (g: CanvasRenderingContext2D): void {
   for (let y = 0; y < map.length; y++) {
     for (let x = 0; x < map[y].length; x++) {
       if (map[y][x] === Tile.UNBREAKABLE) g.fillStyle = '#999999'
@@ -193,8 +196,9 @@ function draw (): void {
       }
     }
   }
+}
 
-  // Draw player
+function drawPlayer (g: CanvasRenderingContext2D): void {
   g.fillStyle = '#00ff00'
   if (!gameOver) {
     g.fillRect(playerX * TILE_SIZE, playerY * TILE_SIZE, TILE_SIZE, TILE_SIZE)
