@@ -163,13 +163,17 @@ export function update (): void {
   }
 }
 
-function draw (): void {
+function createGraphics (): CanvasRenderingContext2D {
   const canvas = document.getElementById('GameCanvas') as HTMLCanvasElement
   const g = canvas.getContext('2d')
 
   if (g === null) throw new Error('Cannot find the GameCanvas')
-
   g.clearRect(0, 0, canvas.width, canvas.height)
+  return g
+}
+
+function draw (): void {
+  const g = createGraphics()
   drawMap(g)
   drawPlayer(g)
 }
