@@ -28,6 +28,7 @@ interface Input {
   isLeft: () => boolean
   isRight: () => boolean
   isPlace: () => boolean
+  handle: () => void
 }
 
 export class Up implements Input {
@@ -36,6 +37,7 @@ export class Up implements Input {
   isLeft (): boolean { return false }
   isRight (): boolean { return false }
   isPlace (): boolean { return false }
+  handle (): void { move(0, -1) }
 }
 
 export class Down implements Input {
@@ -44,6 +46,7 @@ export class Down implements Input {
   isLeft (): boolean { return false }
   isRight (): boolean { return false }
   isPlace (): boolean { return false }
+  handle (): void { move(0, 1) }
 }
 
 export class Left implements Input {
@@ -52,6 +55,7 @@ export class Left implements Input {
   isLeft (): boolean { return true }
   isRight (): boolean { return false }
   isPlace (): boolean { return false }
+  handle (): void { move(-1, 0) }
 }
 
 export class Right implements Input {
@@ -60,6 +64,7 @@ export class Right implements Input {
   isLeft (): boolean { return false }
   isRight (): boolean { return true }
   isPlace (): boolean { return false }
+  handle (): void { move(1, 0) }
 }
 
 export class Place implements Input {
@@ -68,6 +73,7 @@ export class Place implements Input {
   isLeft (): boolean { return false }
   isRight (): boolean { return false }
   isPlace (): boolean { return true }
+  handle (): void { placeBomb() }
 }
 
 export let playerX = 1
@@ -143,11 +149,7 @@ export function handleInputs (): void {
 }
 
 function handleInput (input: Input): void {
-  if (input.isLeft()) move(-1, 0)
-  else if (input.isRight()) move(1, 0)
-  else if (input.isUp()) move(0, -1)
-  else if (input.isDown()) move(0, 1)
-  else if (input.isPlace()) placeBomb()
+  input.handle()
 }
 
 function handleGameOver (): void {
