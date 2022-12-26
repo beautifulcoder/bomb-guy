@@ -142,14 +142,10 @@ export function update (): void {
 
 export function handleInputs (): void {
   while (inputs.length > 0 && !gameOver) {
-    const current = inputs.pop() ?? throwExpression('Invalid key input')
-    handleInput(current)
+    const input = inputs.pop() ?? throwExpression('Invalid key input')
+    input.handle()
   }
   handleGameOver()
-}
-
-function handleInput (input: Input): void {
-  input.handle()
 }
 
 function handleGameOver (): void {
