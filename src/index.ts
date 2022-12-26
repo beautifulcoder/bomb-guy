@@ -89,6 +89,12 @@ export function placeBomb (): void {
 }
 
 export function update (): void {
+  handleInputs()
+  if (hasDelay()) return
+  updateMap()
+}
+
+function handleInputs (): void {
   while (inputs.length > 0 && !gameOver) {
     const current = inputs.pop()
     if (current === Input.LEFT) move(-1, 0)
@@ -105,10 +111,15 @@ export function update (): void {
     map[playerY][playerX] === Tile.MONSTER_LEFT ||
     map[playerY][playerX] === Tile.MONSTER_RIGHT
   ) gameOver = true
+}
 
-  if (--delay > 0) return
+export function hasDelay (): boolean {
+  if (--delay > 0) return true
   delay = DELAY
+  return false
+}
 
+function updateMap (): void {
   for (let y = 1; y < map.length; y++) {
     for (let x = 1; x < map[y].length; x++) {
       if (map[y][x] === Tile.BOMB) {
