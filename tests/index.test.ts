@@ -1,7 +1,11 @@
 import { equal, ok } from 'assert'
 import {
   Tile,
-  Input,
+  Up,
+  Down,
+  Left,
+  Right,
+  Place,
   playerX,
   bombs,
   map,
@@ -31,7 +35,12 @@ describe('bomb man', () => {
   })
 
   it('handle inputs', () => {
-    inputs.push(Input.DOWN)
+    inputs.push(new Up())
+    inputs.push(new Down())
+    inputs.push(new Left())
+    inputs.push(new Right())
+    inputs.push(new Place())
+    inputs.push()
     handleInputs()
     equal(0, inputs.length)
   })

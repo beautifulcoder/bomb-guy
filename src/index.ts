@@ -22,12 +22,52 @@ export enum Tile {
   MONSTER_LEFT,
 }
 
-export enum Input {
-  UP,
-  DOWN,
-  LEFT,
-  RIGHT,
-  PLACE,
+interface Input {
+  isUp: () => boolean
+  isDown: () => boolean
+  isLeft: () => boolean
+  isRight: () => boolean
+  isPlace: () => boolean
+}
+
+export class Up implements Input {
+  isUp (): boolean { return true }
+  isDown (): boolean { return false }
+  isLeft (): boolean { return false }
+  isRight (): boolean { return false }
+  isPlace (): boolean { return false }
+}
+
+export class Down implements Input {
+  isUp (): boolean { return false }
+  isDown (): boolean { return true }
+  isLeft (): boolean { return false }
+  isRight (): boolean { return false }
+  isPlace (): boolean { return false }
+}
+
+export class Left implements Input {
+  isUp (): boolean { return false }
+  isDown (): boolean { return false }
+  isLeft (): boolean { return true }
+  isRight (): boolean { return false }
+  isPlace (): boolean { return false }
+}
+
+export class Right implements Input {
+  isUp (): boolean { return false }
+  isDown (): boolean { return false }
+  isLeft (): boolean { return false }
+  isRight (): boolean { return true }
+  isPlace (): boolean { return false }
+}
+
+export class Place implements Input {
+  isUp (): boolean { return false }
+  isDown (): boolean { return false }
+  isLeft (): boolean { return false }
+  isRight (): boolean { return false }
+  isPlace (): boolean { return true }
 }
 
 export let playerX = 1
@@ -96,18 +136,18 @@ export function update (): void {
 
 export function handleInputs (): void {
   while (inputs.length > 0 && !gameOver) {
-    const current = inputs.pop()
+    const current = inputs.pop() ?? throwExpression('Invalid key input')
     handleInput(current)
   }
   handleGameOver()
 }
 
-function handleInput (input: Input | undefined): void {
-  if (input === Input.LEFT) move(-1, 0)
-  else if (input === Input.RIGHT) move(1, 0)
-  else if (input === Input.UP) move(0, -1)
-  else if (input === Input.DOWN) move(0, 1)
-  else if (input === Input.PLACE) placeBomb()
+function handleInput (input: Input): void {
+  if (input.isLeft()) move(-1, 0)
+  else if (input.isRight()) move(1, 0)
+  else if (input.isUp()) move(0, -1)
+  else if (input.isDown()) move(0, 1)
+  else if (input.isPlace()) placeBomb()
 }
 
 function handleGameOver (): void {
@@ -185,6 +225,10 @@ function updateTile (x: number, y: number): void {
   }
 }
 
+function throwExpression (message: string): never {
+  throw new Error(message)
+}
+
 function createGraphics (): CanvasRenderingContext2D {
   const canvas = document.getElementById('GameCanvas') as HTMLCanvasElement
   const g = canvas.getContext('2d')
@@ -250,9 +294,9 @@ const UP_KEY = 'ArrowUp'
 const RIGHT_KEY = 'ArrowRight'
 const DOWN_KEY = 'ArrowDown'
 window.addEventListener('keydown', (e) => {
-  if (e.key === LEFT_KEY || e.key === 'a') inputs.push(Input.LEFT)
-  else if (e.key === UP_KEY || e.key === 'w') inputs.push(Input.UP)
-  else if (e.key === RIGHT_KEY || e.key === 'd') inputs.push(Input.RIGHT)
-  else if (e.key === DOWN_KEY || e.key === 's') inputs.push(Input.DOWN)
-  else if (e.key === ' ') inputs.push(Input.PLACE)
+  if (e.key === LEFT_KEY || e.key === 'a') inputs.push(new Left())
+  else if (e.key === UP_KEY || e.key === 'w') inputs.push(new Up())
+  else if (e.key === RIGHT_KEY || e.key === 'd') inputs.push(new Right())
+  else if (e.key === DOWN_KEY || e.key === 's') inputs.push(new Down())
+  else if (e.key === ' ') inputs.push(new Place())
 })
