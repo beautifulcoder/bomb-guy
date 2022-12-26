@@ -22,7 +22,7 @@ export enum Tile {
   MONSTER_LEFT,
 }
 
-enum Input {
+export enum Input {
   UP,
   DOWN,
   LEFT,
@@ -44,7 +44,7 @@ export const map: Tile[][] = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1]
 ]
 
-const inputs: Input[] = []
+export const inputs: Input[] = []
 
 let delay = 0
 export let bombs = 1
@@ -94,16 +94,23 @@ export function update (): void {
   updateMap()
 }
 
-function handleInputs (): void {
+export function handleInputs (): void {
   while (inputs.length > 0 && !gameOver) {
     const current = inputs.pop()
-    if (current === Input.LEFT) move(-1, 0)
-    else if (current === Input.RIGHT) move(1, 0)
-    else if (current === Input.UP) move(0, -1)
-    else if (current === Input.DOWN) move(0, 1)
-    else if (current === Input.PLACE) placeBomb()
+    handleInput(current)
   }
+  handleGameOver()
+}
 
+function handleInput (input: Input | undefined): void {
+  if (input === Input.LEFT) move(-1, 0)
+  else if (input === Input.RIGHT) move(1, 0)
+  else if (input === Input.UP) move(0, -1)
+  else if (input === Input.DOWN) move(0, 1)
+  else if (input === Input.PLACE) placeBomb()
+}
+
+function handleGameOver (): void {
   if (
     map[playerY][playerX] === Tile.FIRE ||
     map[playerY][playerX] === Tile.MONSTER_DOWN ||
