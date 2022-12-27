@@ -245,25 +245,29 @@ function draw (): void {
 function drawMap (g: CanvasRenderingContext2D): void {
   for (let y = 0; y < map.length; y++) {
     for (let x = 0; x < map[y].length; x++) {
-      if (map[y][x] === Tile.UNBREAKABLE) g.fillStyle = '#999999'
-      else if (map[y][x] === Tile.STONE) g.fillStyle = '#0000cc'
-      else if (map[y][x] === Tile.EXTRA_BOMB) g.fillStyle = '#00cc00'
-      else if (map[y][x] === Tile.FIRE) g.fillStyle = '#ffcc00'
-      else if (
-        map[y][x] === Tile.MONSTER_UP ||
-        map[y][x] === Tile.MONSTER_LEFT ||
-        map[y][x] === Tile.MONSTER_RIGHT ||
-        map[y][x] === Tile.MONSTER_DOWN
-      ) g.fillStyle = '#cc00cc'
-      else if (map[y][x] === Tile.BOMB) g.fillStyle = '#770000'
-      else if (map[y][x] === Tile.BOMB_CLOSE) g.fillStyle = '#cc0000'
-      else if (map[y][x] === Tile.BOMB_REALLY_CLOSE) g.fillStyle = '#ff0000'
+      colorOfTile(g, y, x)
 
       if (map[y][x] !== Tile.AIR) {
         g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
       }
     }
   }
+}
+
+function colorOfTile (g: CanvasRenderingContext2D, y: number, x: number): void {
+  if (map[y][x] === Tile.UNBREAKABLE) g.fillStyle = '#999999'
+  else if (map[y][x] === Tile.STONE) g.fillStyle = '#0000cc'
+  else if (map[y][x] === Tile.EXTRA_BOMB) g.fillStyle = '#00cc00'
+  else if (map[y][x] === Tile.FIRE) g.fillStyle = '#ffcc00'
+  else if (
+    map[y][x] === Tile.MONSTER_UP ||
+    map[y][x] === Tile.MONSTER_LEFT ||
+    map[y][x] === Tile.MONSTER_RIGHT ||
+    map[y][x] === Tile.MONSTER_DOWN
+  ) g.fillStyle = '#cc00cc'
+  else if (map[y][x] === Tile.BOMB) g.fillStyle = '#770000'
+  else if (map[y][x] === Tile.BOMB_CLOSE) g.fillStyle = '#cc0000'
+  else if (map[y][x] === Tile.BOMB_REALLY_CLOSE) g.fillStyle = '#ff0000'
 }
 
 function drawPlayer (g: CanvasRenderingContext2D): void {
