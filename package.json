@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "prebuild": "eslint .",
-    "start": "http-server",
+    "start": "http-server -c-1",
     "test": "mocha",
     "build": "tsc"
   },

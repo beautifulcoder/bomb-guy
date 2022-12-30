@@ -4,7 +4,7 @@ const SLEEP = 1000 / FPS
 const TPS = 2
 const DELAY = FPS / TPS
 
-export enum Tile {
+export enum RawTile {
   AIR,
   UNBREAKABLE,
   STONE,
@@ -19,7 +19,295 @@ export enum Tile {
   TMP_MONSTER_RIGHT,
   MONSTER_DOWN,
   TMP_MONSTER_DOWN,
-  MONSTER_LEFT,
+  MONSTER_LEFT
+}
+
+interface Tile {
+  isAir: () => boolean
+  isUnbreakable: () => boolean
+  isStone: () => boolean
+  isBomb: () => boolean
+  isBombClose: () => boolean
+  isBombReallyClose: () => boolean
+  isTmpFire: () => boolean
+  isFire: () => boolean
+  isExtraBomb: () => boolean
+  isMonsterUp: () => boolean
+  isMonsterRight: () => boolean
+  isTmpMonsterRight: () => boolean
+  isMonsterDown: () => boolean
+  isTmpMonsterDown: () => boolean
+  isMonsterLeft: () => boolean
+}
+
+class Air implements Tile {
+  isAir (): boolean { return true }
+  isUnbreakable (): boolean { return false }
+  isStone (): boolean { return false }
+  isBomb (): boolean { return false }
+  isBombClose (): boolean { return false }
+  isBombReallyClose (): boolean { return false }
+  isTmpFire (): boolean { return false }
+  isFire (): boolean { return false }
+  isExtraBomb (): boolean { return false }
+  isMonsterUp (): boolean { return false }
+  isMonsterRight (): boolean { return false }
+  isTmpMonsterRight (): boolean { return false }
+  isMonsterDown (): boolean { return false }
+  isTmpMonsterDown (): boolean { return false }
+  isMonsterLeft (): boolean { return false }
+}
+
+class Unbreakable implements Tile {
+  isAir (): boolean { return false }
+  isUnbreakable (): boolean { return true }
+  isStone (): boolean { return false }
+  isBomb (): boolean { return false }
+  isBombClose (): boolean { return false }
+  isBombReallyClose (): boolean { return false }
+  isTmpFire (): boolean { return false }
+  isFire (): boolean { return false }
+  isExtraBomb (): boolean { return false }
+  isMonsterUp (): boolean { return false }
+  isMonsterRight (): boolean { return false }
+  isTmpMonsterRight (): boolean { return false }
+  isMonsterDown (): boolean { return false }
+  isTmpMonsterDown (): boolean { return false }
+  isMonsterLeft (): boolean { return false }
+}
+
+class Stone implements Tile {
+  isAir (): boolean { return false }
+  isUnbreakable (): boolean { return false }
+  isStone (): boolean { return true }
+  isBomb (): boolean { return false }
+  isBombClose (): boolean { return false }
+  isBombReallyClose (): boolean { return false }
+  isTmpFire (): boolean { return false }
+  isFire (): boolean { return false }
+  isExtraBomb (): boolean { return false }
+  isMonsterUp (): boolean { return false }
+  isMonsterRight (): boolean { return false }
+  isTmpMonsterRight (): boolean { return false }
+  isMonsterDown (): boolean { return false }
+  isTmpMonsterDown (): boolean { return false }
+  isMonsterLeft (): boolean { return false }
+}
+
+class Bomb implements Tile {
+  isAir (): boolean { return false }
+  isUnbreakable (): boolean { return false }
+  isStone (): boolean { return false }
+  isBomb (): boolean { return true }
+  isBombClose (): boolean { return false }
+  isBombReallyClose (): boolean { return false }
+  isTmpFire (): boolean { return false }
+  isFire (): boolean { return false }
+  isExtraBomb (): boolean { return false }
+  isMonsterUp (): boolean { return false }
+  isMonsterRight (): boolean { return false }
+  isTmpMonsterRight (): boolean { return false }
+  isMonsterDown (): boolean { return false }
+  isTmpMonsterDown (): boolean { return false }
+  isMonsterLeft (): boolean { return false }
+}
+
+class BombClose implements Tile {
+  isAir (): boolean { return false }
+  isUnbreakable (): boolean { return false }
+  isStone (): boolean { return false }
+  isBomb (): boolean { return false }
+  isBombClose (): boolean { return true }
+  isBombReallyClose (): boolean { return false }
+  isTmpFire (): boolean { return false }
+  isFire (): boolean { return false }
+  isExtraBomb (): boolean { return false }
+  isMonsterUp (): boolean { return false }
+  isMonsterRight (): boolean { return false }
+  isTmpMonsterRight (): boolean { return false }
+  isMonsterDown (): boolean { return false }
+  isTmpMonsterDown (): boolean { return false }
+  isMonsterLeft (): boolean { return false }
+}
+
+class BombReallyClose implements Tile {
+  isAir (): boolean { return false }
+  isUnbreakable (): boolean { return false }
+  isStone (): boolean { return false }
+  isBomb (): boolean { return false }
+  isBombClose (): boolean { return false }
+  isBombReallyClose (): boolean { return true }
+  isTmpFire (): boolean { return false }
+  isFire (): boolean { return false }
+  isExtraBomb (): boolean { return false }
+  isMonsterUp (): boolean { return false }
+  isMonsterRight (): boolean { return false }
+  isTmpMonsterRight (): boolean { return false }
+  isMonsterDown (): boolean { return false }
+  isTmpMonsterDown (): boolean { return false }
+  isMonsterLeft (): boolean { return false }
+}
+
+class TmpFire implements Tile {
+  isAir (): boolean { return false }
+  isUnbreakable (): boolean { return false }
+  isStone (): boolean { return false }
+  isBomb (): boolean { return false }
+  isBombClose (): boolean { return false }
+  isBombReallyClose (): boolean { return false }
+  isTmpFire (): boolean { return true }
+  isFire (): boolean { return false }
+  isExtraBomb (): boolean { return false }
+  isMonsterUp (): boolean { return false }
+  isMonsterRight (): boolean { return false }
+  isTmpMonsterRight (): boolean { return false }
+  isMonsterDown (): boolean { return false }
+  isTmpMonsterDown (): boolean { return false }
+  isMonsterLeft (): boolean { return false }
+}
+
+export class Fire implements Tile {
+  isAir (): boolean { return false }
+  isUnbreakable (): boolean { return false }
+  isStone (): boolean { return false }
+  isBomb (): boolean { return false }
+  isBombClose (): boolean { return false }
+  isBombReallyClose (): boolean { return false }
+  isTmpFire (): boolean { return false }
+  isFire (): boolean { return true }
+  isExtraBomb (): boolean { return false }
+  isMonsterUp (): boolean { return false }
+  isMonsterRight (): boolean { return false }
+  isTmpMonsterRight (): boolean { return false }
+  isMonsterDown (): boolean { return false }
+  isTmpMonsterDown (): boolean { return false }
+  isMonsterLeft (): boolean { return false }
+}
+
+class ExtraBomb implements Tile {
+  isAir (): boolean { return false }
+  isUnbreakable (): boolean { return false }
+  isStone (): boolean { return false }
+  isBomb (): boolean { return false }
+  isBombClose (): boolean { return false }
+  isBombReallyClose (): boolean { return false }
+  isTmpFire (): boolean { return false }
+  isFire (): boolean { return false }
+  isExtraBomb (): boolean { return true }
+  isMonsterUp (): boolean { return false }
+  isMonsterRight (): boolean { return false }
+  isTmpMonsterRight (): boolean { return false }
+  isMonsterDown (): boolean { return false }
+  isTmpMonsterDown (): boolean { return false }
+  isMonsterLeft (): boolean { return false }
+}
+
+class MonsterUp implements Tile {
+  isAir (): boolean { return false }
+  isUnbreakable (): boolean { return false }
+  isStone (): boolean { return false }
+  isBomb (): boolean { return false }
+  isBombClose (): boolean { return false }
+  isBombReallyClose (): boolean { return false }
+  isTmpFire (): boolean { return false }
+  isFire (): boolean { return false }
+  isExtraBomb (): boolean { return false }
+  isMonsterUp (): boolean { return true }
+  isMonsterRight (): boolean { return false }
+  isTmpMonsterRight (): boolean { return false }
+  isMonsterDown (): boolean { return false }
+  isTmpMonsterDown (): boolean { return false }
+  isMonsterLeft (): boolean { return false }
+}
+
+class MonsterRight implements Tile {
+  isAir (): boolean { return false }
+  isUnbreakable (): boolean { return false }
+  isStone (): boolean { return false }
+  isBomb (): boolean { return false }
+  isBombClose (): boolean { return false }
+  isBombReallyClose (): boolean { return false }
+  isTmpFire (): boolean { return false }
+  isFire (): boolean { return false }
+  isExtraBomb (): boolean { return false }
+  isMonsterUp (): boolean { return false }
+  isMonsterRight (): boolean { return true }
+  isTmpMonsterRight (): boolean { return false }
+  isMonsterDown (): boolean { return false }
+  isTmpMonsterDown (): boolean { return false }
+  isMonsterLeft (): boolean { return false }
+}
+
+class TmpMonsterRight implements Tile {
+  isAir (): boolean { return false }
+  isUnbreakable (): boolean { return false }
+  isStone (): boolean { return false }
+  isBomb (): boolean { return false }
+  isBombClose (): boolean { return false }
+  isBombReallyClose (): boolean { return false }
+  isTmpFire (): boolean { return false }
+  isFire (): boolean { return false }
+  isExtraBomb (): boolean { return false }
+  isMonsterUp (): boolean { return false }
+  isMonsterRight (): boolean { return false }
+  isTmpMonsterRight (): boolean { return true }
+  isMonsterDown (): boolean { return false }
+  isTmpMonsterDown (): boolean { return false }
+  isMonsterLeft (): boolean { return false }
+}
+
+class MonsterDown implements Tile {
+  isAir (): boolean { return false }
+  isUnbreakable (): boolean { return false }
+  isStone (): boolean { return false }
+  isBomb (): boolean { return false }
+  isBombClose (): boolean { return false }
+  isBombReallyClose (): boolean { return false }
+  isTmpFire (): boolean { return false }
+  isFire (): boolean { return false }
+  isExtraBomb (): boolean { return false }
+  isMonsterUp (): boolean { return false }
+  isMonsterRight (): boolean { return false }
+  isTmpMonsterRight (): boolean { return false }
+  isMonsterDown (): boolean { return true }
+  isTmpMonsterDown (): boolean { return false }
+  isMonsterLeft (): boolean { return false }
+}
+
+class TmpMonsterDown implements Tile {
+  isAir (): boolean { return false }
+  isUnbreakable (): boolean { return false }
+  isStone (): boolean { return false }
+  isBomb (): boolean { return false }
+  isBombClose (): boolean { return false }
+  isBombReallyClose (): boolean { return false }
+  isTmpFire (): boolean { return false }
+  isFire (): boolean { return false }
+  isExtraBomb (): boolean { return false }
+  isMonsterUp (): boolean { return false }
+  isMonsterRight (): boolean { return false }
+  isTmpMonsterRight (): boolean { return false }
+  isMonsterDown (): boolean { return false }
+  isTmpMonsterDown (): boolean { return true }
+  isMonsterLeft (): boolean { return false }
+}
+
+class MonsterLeft implements Tile {
+  isAir (): boolean { return false }
+  isUnbreakable (): boolean { return false }
+  isStone (): boolean { return false }
+  isBomb (): boolean { return false }
+  isBombClose (): boolean { return false }
+  isBombReallyClose (): boolean { return false }
+  isTmpFire (): boolean { return false }
+  isFire (): boolean { return false }
+  isExtraBomb (): boolean { return false }
+  isMonsterUp (): boolean { return false }
+  isMonsterRight (): boolean { return false }
+  isTmpMonsterRight (): boolean { return false }
+  isMonsterDown (): boolean { return false }
+  isTmpMonsterDown (): boolean { return false }
+  isMonsterLeft (): boolean { return true }
 }
 
 interface Input {
@@ -78,7 +366,7 @@ export class Place implements Input {
 
 export let playerX = 1
 export let playerY = 1
-export const map: Tile[][] = [
+export const rawMap: RawTile[][] = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1],
   [1, 0, 0, 2, 2, 2, 2, 2, 1],
   [1, 0, 1, 2, 1, 2, 1, 2, 1],
@@ -90,6 +378,39 @@ export const map: Tile[][] = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1]
 ]
 
+export let map: Tile[][]
+
+function transformTile (tile: RawTile): Tile {
+  switch (tile) {
+    case RawTile.AIR: return new Air()
+    case RawTile.UNBREAKABLE: return new Unbreakable()
+    case RawTile.STONE: return new Stone()
+    case RawTile.BOMB: return new Bomb()
+    case RawTile.BOMB_CLOSE: return new BombClose()
+    case RawTile.BOMB_REALLY_CLOSE: return new BombReallyClose()
+    case RawTile.TMP_FIRE: return new TmpFire()
+    case RawTile.FIRE: return new Fire()
+    case RawTile.EXTRA_BOMB: return new ExtraBomb()
+    case RawTile.MONSTER_UP: return new MonsterUp()
+    case RawTile.MONSTER_RIGHT: return new MonsterRight()
+    case RawTile.TMP_MONSTER_RIGHT: return new TmpMonsterRight()
+    case RawTile.MONSTER_DOWN: return new MonsterDown()
+    case RawTile.TMP_MONSTER_DOWN: return new TmpMonsterDown()
+    case RawTile.MONSTER_LEFT: return new MonsterLeft()
+    default: throwExpression('Unexpected tile')
+  }
+}
+
+export function transformMap (): void {
+  map = new Array(rawMap.length)
+  for (let y = 0; y < rawMap.length; y++) {
+    map[y] = new Array(rawMap[y].length)
+    for (let x = 0; x < rawMap[y].length; x++) {
+      map[y][x] = transformTile(rawMap[y][x])
+    }
+  }
+}
+
 export const inputs: Input[] = []
 
 let delay = 0
@@ -97,14 +418,14 @@ export let bombs = 1
 export let gameOver = false
 
 export function explode (x: number, y: number, type: Tile): void {
-  if (map[y][x] === Tile.STONE) {
-    if (Math.random() < 0.1) map[y][x] = Tile.EXTRA_BOMB
+  if (map[y][x].isStone()) {
+    if (Math.random() < 0.1) map[y][x] = new ExtraBomb()
     else map[y][x] = type
-  } else if (map[y][x] !== Tile.UNBREAKABLE) {
+  } else if (!map[y][x].isUnbreakable()) {
     if (
-      map[y][x] === Tile.BOMB ||
-      map[y][x] === Tile.BOMB_CLOSE ||
-      map[y][x] === Tile.BOMB_REALLY_CLOSE
+      map[y][x].isBomb() ||
+      map[y][x].isBombClose() ||
+      map[y][x].isBombReallyClose()
     ) {
       bombs++
     }
@@ -114,22 +435,22 @@ export function explode (x: number, y: number, type: Tile): void {
 
 export function move (x: number, y: number): void {
   if (
-    map[playerY + y][playerX + x] === Tile.AIR ||
-    map[playerY + y][playerX + x] === Tile.FIRE
+    map[playerY + y][playerX + x].isAir() ||
+    map[playerY + y][playerX + x].isFire()
   ) {
     playerY += y
     playerX += x
-  } else if (map[playerY + y][playerX + x] === Tile.EXTRA_BOMB) {
+  } else if (map[playerY + y][playerX + x].isExtraBomb()) {
     playerY += y
     playerX += x
     bombs++
-    map[playerY][playerX] = Tile.AIR
+    map[playerY][playerX] = new Air()
   }
 }
 
 export function placeBomb (): void {
   if (bombs > 0) {
-    map[playerY][playerX] = Tile.BOMB
+    map[playerY][playerX] = new Bomb()
     bombs--
   }
 }
@@ -150,15 +471,15 @@ export function handleInputs (): void {
 
 function handleGameOver (): void {
   if (
-    map[playerY][playerX] === Tile.FIRE ||
-    map[playerY][playerX] === Tile.MONSTER_DOWN ||
-    map[playerY][playerX] === Tile.MONSTER_UP ||
-    map[playerY][playerX] === Tile.MONSTER_LEFT ||
-    map[playerY][playerX] === Tile.MONSTER_RIGHT
+    map[playerY][playerX].isFire() ||
+    map[playerY][playerX].isMonsterDown() ||
+    map[playerY][playerX].isMonsterUp() ||
+    map[playerY][playerX].isMonsterLeft() ||
+    map[playerY][playerX].isMonsterRight()
   ) gameOver = true
 }
 
-export function hasDelay (): boolean {
+function hasDelay (): boolean {
   if (--delay > 0) return true
   delay = DELAY
   return false
@@ -173,52 +494,52 @@ function updateMap (): void {
 }
 
 function updateTile (x: number, y: number): void {
-  if (map[y][x] === Tile.BOMB) {
-    map[y][x] = Tile.BOMB_CLOSE
-  } else if (map[y][x] === Tile.BOMB_CLOSE) {
-    map[y][x] = Tile.BOMB_REALLY_CLOSE
-  } else if (map[y][x] === Tile.BOMB_REALLY_CLOSE) {
-    explode(x + 0, y - 1, Tile.FIRE)
-    explode(x + 0, y + 1, Tile.TMP_FIRE)
-    explode(x - 1, y + 0, Tile.FIRE)
-    explode(x + 1, y + 0, Tile.TMP_FIRE)
-    map[y][x] = Tile.FIRE
+  if (map[y][x].isBomb()) {
+    map[y][x] = new BombClose()
+  } else if (map[y][x].isBombClose()) {
+    map[y][x] = new BombReallyClose()
+  } else if (map[y][x].isBombReallyClose()) {
+    explode(x + 0, y - 1, new Fire())
+    explode(x + 0, y + 1, new TmpFire())
+    explode(x - 1, y + 0, new Fire())
+    explode(x + 1, y + 0, new TmpFire())
+    map[y][x] = new Fire()
     bombs++
-  } else if (map[y][x] === Tile.TMP_FIRE) {
-    map[y][x] = Tile.FIRE
-  } else if (map[y][x] === Tile.FIRE) {
-    map[y][x] = Tile.AIR
-  } else if (map[y][x] === Tile.TMP_MONSTER_DOWN) {
-    map[y][x] = Tile.MONSTER_DOWN
-  } else if (map[y][x] === Tile.TMP_MONSTER_RIGHT) {
-    map[y][x] = Tile.MONSTER_RIGHT
-  } else if (map[y][x] === Tile.MONSTER_RIGHT) {
-    if (map[y][x + 1] === Tile.AIR) {
-      map[y][x] = Tile.AIR
-      map[y][x + 1] = Tile.TMP_MONSTER_RIGHT
+  } else if (map[y][x].isTmpFire()) {
+    map[y][x] = new Fire()
+  } else if (map[y][x].isFire()) {
+    map[y][x] = new Air()
+  } else if (map[y][x].isTmpMonsterDown()) {
+    map[y][x] = new MonsterDown()
+  } else if (map[y][x].isTmpMonsterRight()) {
+    map[y][x] = new MonsterRight()
+  } else if (map[y][x].isMonsterRight()) {
+    if (map[y][x + 1].isAir()) {
+      map[y][x] = new Air()
+      map[y][x + 1] = new MonsterRight()
     } else {
-      map[y][x] = Tile.MONSTER_DOWN
+      map[y][x] = new MonsterDown()
     }
-  } else if (map[y][x] === Tile.MONSTER_DOWN) {
-    if (map[y + 1][x] === Tile.AIR) {
-      map[y][x] = Tile.AIR
-      map[y + 1][x] = Tile.TMP_MONSTER_DOWN
+  } else if (map[y][x].isMonsterDown()) {
+    if (map[y + 1][x].isAir()) {
+      map[y][x] = new Air()
+      map[y + 1][x] = new TmpMonsterDown()
     } else {
-      map[y][x] = Tile.MONSTER_LEFT
+      map[y][x] = new MonsterLeft()
     }
-  } else if (map[y][x] === Tile.MONSTER_LEFT) {
-    if (map[y][x - 1] === Tile.AIR) {
-      map[y][x] = Tile.AIR
-      map[y][x - 1] = Tile.MONSTER_LEFT
+  } else if (map[y][x].isMonsterLeft()) {
+    if (map[y][x - 1].isAir()) {
+      map[y][x] = new Air()
+      map[y][x - 1] = new MonsterLeft()
     } else {
-      map[y][x] = Tile.MONSTER_UP
+      map[y][x] = new MonsterUp()
     }
-  } else if (map[y][x] === Tile.MONSTER_UP) {
-    if (map[y - 1][x] === Tile.AIR) {
-      map[y][x] = Tile.AIR
-      map[y - 1][x] = Tile.MONSTER_UP
+  } else if (map[y][x].isMonsterUp()) {
+    if (map[y - 1][x].isAir()) {
+      map[y][x] = new Air()
+      map[y - 1][x] = new MonsterUp()
     } else {
-      map[y][x] = Tile.MONSTER_RIGHT
+      map[y][x] = new MonsterRight()
     }
   }
 }
@@ -247,7 +568,7 @@ function drawMap (g: CanvasRenderingContext2D): void {
     for (let x = 0; x < map[y].length; x++) {
       colorOfTile(g, y, x)
 
-      if (map[y][x] !== Tile.AIR) {
+      if (!map[y][x].isAir()) {
         g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
       }
     }
@@ -255,19 +576,19 @@ function drawMap (g: CanvasRenderingContext2D): void {
 }
 
 function colorOfTile (g: CanvasRenderingContext2D, y: number, x: number): void {
-  if (map[y][x] === Tile.UNBREAKABLE) g.fillStyle = '#999999'
-  else if (map[y][x] === Tile.STONE) g.fillStyle = '#0000cc'
-  else if (map[y][x] === Tile.EXTRA_BOMB) g.fillStyle = '#00cc00'
-  else if (map[y][x] === Tile.FIRE) g.fillStyle = '#ffcc00'
+  if (map[y][x].isUnbreakable()) g.fillStyle = '#999999'
+  else if (map[y][x].isStone()) g.fillStyle = '#0000cc'
+  else if (map[y][x].isExtraBomb()) g.fillStyle = '#00cc00'
+  else if (map[y][x].isFire()) g.fillStyle = '#ffcc00'
   else if (
-    map[y][x] === Tile.MONSTER_UP ||
-    map[y][x] === Tile.MONSTER_LEFT ||
-    map[y][x] === Tile.MONSTER_RIGHT ||
-    map[y][x] === Tile.MONSTER_DOWN
+    map[y][x].isMonsterUp() ||
+    map[y][x].isMonsterLeft() ||
+    map[y][x].isMonsterRight() ||
+    map[y][x].isMonsterDown()
   ) g.fillStyle = '#cc00cc'
-  else if (map[y][x] === Tile.BOMB) g.fillStyle = '#770000'
-  else if (map[y][x] === Tile.BOMB_CLOSE) g.fillStyle = '#cc0000'
-  else if (map[y][x] === Tile.BOMB_REALLY_CLOSE) g.fillStyle = '#ff0000'
+  else if (map[y][x].isBomb()) g.fillStyle = '#770000'
+  else if (map[y][x].isBombClose()) g.fillStyle = '#cc0000'
+  else if (map[y][x].isBombReallyClose()) g.fillStyle = '#ff0000'
 }
 
 function drawPlayer (g: CanvasRenderingContext2D): void {
@@ -288,6 +609,7 @@ function gameLoop (): void {
 }
 
 window.onload = () => {
+  transformMap()
   gameLoop()
 }
 

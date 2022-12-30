@@ -1,6 +1,6 @@
 import { equal, ok } from 'assert'
 import {
-  Tile,
+  Fire,
   Up,
   Down,
   Left,
@@ -15,8 +15,11 @@ import {
   move,
   update,
   handleInputs,
-  explode
+  explode,
+  transformMap
 } from '../src/index'
+
+transformMap()
 
 describe('bomb man', () => {
   it('place bomb', () => {
@@ -30,8 +33,8 @@ describe('bomb man', () => {
   })
 
   it('explode bomb', () => {
-    explode(2, 1, Tile.FIRE)
-    equal(Tile.FIRE, map[1][2])
+    explode(2, 1, new Fire())
+    ok(map[1][2].isFire())
   })
 
   it('handle inputs', () => {
