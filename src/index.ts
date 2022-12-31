@@ -38,7 +38,7 @@ interface Tile {
   isMonsterDown: () => boolean
   isTmpMonsterDown: () => boolean
   isMonsterLeft: () => boolean
-  color: (g: CanvasRenderingContext2D) => void
+  draw: (g: CanvasRenderingContext2D, x: number, y: number) => void
 }
 
 class Air implements Tile {
@@ -57,7 +57,8 @@ class Air implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
-  color (g: CanvasRenderingContext2D): void { }
+  draw (g: CanvasRenderingContext2D, x: number, y: number): void {
+  }
 }
 
 class Unbreakable implements Tile {
@@ -76,8 +77,9 @@ class Unbreakable implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
-  color (g: CanvasRenderingContext2D): void {
+  draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#999999'
+    g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
   }
 }
 
@@ -97,8 +99,9 @@ class Stone implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
-  color (g: CanvasRenderingContext2D): void {
+  draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#0000cc'
+    g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
   }
 }
 
@@ -118,8 +121,9 @@ class Bomb implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
-  color (g: CanvasRenderingContext2D): void {
+  draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#770000'
+    g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
   }
 }
 
@@ -139,8 +143,9 @@ class BombClose implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
-  color (g: CanvasRenderingContext2D): void {
+  draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#cc0000'
+    g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
   }
 }
 
@@ -160,8 +165,9 @@ class BombReallyClose implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
-  color (g: CanvasRenderingContext2D): void {
+  draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#ff0000'
+    g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
   }
 }
 
@@ -181,7 +187,9 @@ class TmpFire implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
-  color (g: CanvasRenderingContext2D): void { }
+  draw (g: CanvasRenderingContext2D, x: number, y: number): void {
+    g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+  }
 }
 
 export class Fire implements Tile {
@@ -200,8 +208,9 @@ export class Fire implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
-  color (g: CanvasRenderingContext2D): void {
+  draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#ffcc00'
+    g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
   }
 }
 
@@ -221,8 +230,9 @@ class ExtraBomb implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
-  color (g: CanvasRenderingContext2D): void {
+  draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#00cc00'
+    g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
   }
 }
 
@@ -242,8 +252,9 @@ class MonsterUp implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
-  color (g: CanvasRenderingContext2D): void {
+  draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#cc00cc'
+    g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
   }
 }
 
@@ -263,8 +274,9 @@ class MonsterRight implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
-  color (g: CanvasRenderingContext2D): void {
+  draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#cc00cc'
+    g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
   }
 }
 
@@ -284,7 +296,9 @@ class TmpMonsterRight implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
-  color (g: CanvasRenderingContext2D): void { }
+  draw (g: CanvasRenderingContext2D, x: number, y: number): void {
+    g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+  }
 }
 
 class MonsterDown implements Tile {
@@ -303,8 +317,9 @@ class MonsterDown implements Tile {
   isMonsterDown (): boolean { return true }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
-  color (g: CanvasRenderingContext2D): void {
+  draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#cc00cc'
+    g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
   }
 }
 
@@ -324,7 +339,9 @@ class TmpMonsterDown implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return true }
   isMonsterLeft (): boolean { return false }
-  color (g: CanvasRenderingContext2D): void { }
+  draw (g: CanvasRenderingContext2D, x: number, y: number): void {
+    g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+  }
 }
 
 class MonsterLeft implements Tile {
@@ -343,8 +360,9 @@ class MonsterLeft implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return true }
-  color (g: CanvasRenderingContext2D): void {
+  draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#cc00cc'
+    g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
   }
 }
 
@@ -604,11 +622,7 @@ function draw (): void {
 function drawMap (g: CanvasRenderingContext2D): void {
   for (let y = 0; y < map.length; y++) {
     for (let x = 0; x < map[y].length; x++) {
-      map[y][x].color(g)
-
-      if (!map[y][x].isAir()) {
-        g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
-      }
+      map[y][x].draw(g, x, y)
     }
   }
 }
