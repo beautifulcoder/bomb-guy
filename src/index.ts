@@ -39,6 +39,7 @@ interface Tile {
   isTmpMonsterDown: () => boolean
   isMonsterLeft: () => boolean
   draw: (g: CanvasRenderingContext2D, x: number, y: number) => void
+  move: (x: number, y: number) => void
 }
 
 class Air implements Tile {
@@ -57,7 +58,13 @@ class Air implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
+  }
+
+  move (x: number, y: number): void {
+    playerY += y
+    playerX += x
   }
 }
 
@@ -77,10 +84,13 @@ class Unbreakable implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#999999'
     g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
   }
+
+  move (x: number, y: number): void { }
 }
 
 class Stone implements Tile {
@@ -99,10 +109,13 @@ class Stone implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#0000cc'
     g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
   }
+
+  move (x: number, y: number): void { }
 }
 
 class Bomb implements Tile {
@@ -121,10 +134,13 @@ class Bomb implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#770000'
     g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
   }
+
+  move (x: number, y: number): void { }
 }
 
 class BombClose implements Tile {
@@ -143,10 +159,13 @@ class BombClose implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#cc0000'
     g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
   }
+
+  move (x: number, y: number): void { }
 }
 
 class BombReallyClose implements Tile {
@@ -165,10 +184,13 @@ class BombReallyClose implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#ff0000'
     g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
   }
+
+  move (x: number, y: number): void { }
 }
 
 class TmpFire implements Tile {
@@ -187,9 +209,12 @@ class TmpFire implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
   }
+
+  move (x: number, y: number): void { }
 }
 
 export class Fire implements Tile {
@@ -208,9 +233,15 @@ export class Fire implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#ffcc00'
     g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+  }
+
+  move (x: number, y: number): void {
+    playerY += y
+    playerX += x
   }
 }
 
@@ -230,9 +261,17 @@ class ExtraBomb implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#00cc00'
     g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+  }
+
+  move (x: number, y: number): void {
+    playerY += y
+    playerX += x
+    bombs++
+    map[playerY][playerX] = new Air()
   }
 }
 
@@ -252,10 +291,13 @@ class MonsterUp implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#cc00cc'
     g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
   }
+
+  move (x: number, y: number): void { }
 }
 
 class MonsterRight implements Tile {
@@ -274,10 +316,13 @@ class MonsterRight implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#cc00cc'
     g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
   }
+
+  move (x: number, y: number): void { }
 }
 
 class TmpMonsterRight implements Tile {
@@ -296,9 +341,12 @@ class TmpMonsterRight implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
   }
+
+  move (x: number, y: number): void { }
 }
 
 class MonsterDown implements Tile {
@@ -317,10 +365,13 @@ class MonsterDown implements Tile {
   isMonsterDown (): boolean { return true }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#cc00cc'
     g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
   }
+
+  move (x: number, y: number): void { }
 }
 
 class TmpMonsterDown implements Tile {
@@ -339,9 +390,12 @@ class TmpMonsterDown implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return true }
   isMonsterLeft (): boolean { return false }
+
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
   }
+
+  move (x: number, y: number): void { }
 }
 
 class MonsterLeft implements Tile {
@@ -360,10 +414,13 @@ class MonsterLeft implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return true }
+
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#cc00cc'
     g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
   }
+
+  move (x: number, y: number): void { }
 }
 
 interface Input {
@@ -381,7 +438,10 @@ export class Up implements Input {
   isLeft (): boolean { return false }
   isRight (): boolean { return false }
   isPlace (): boolean { return false }
-  handle (): void { move(0, -1) }
+
+  handle (): void {
+    map[playerY + -1][playerX + 0].move(0, -1)
+  }
 }
 
 export class Down implements Input {
@@ -390,7 +450,10 @@ export class Down implements Input {
   isLeft (): boolean { return false }
   isRight (): boolean { return false }
   isPlace (): boolean { return false }
-  handle (): void { move(0, 1) }
+
+  handle (): void {
+    map[playerY + 1][playerX + 0].move(0, 1)
+  }
 }
 
 export class Left implements Input {
@@ -399,7 +462,10 @@ export class Left implements Input {
   isLeft (): boolean { return true }
   isRight (): boolean { return false }
   isPlace (): boolean { return false }
-  handle (): void { move(-1, 0) }
+
+  handle (): void {
+    map[playerY + 0][playerX + -1].move(-1, 0)
+  }
 }
 
 export class Right implements Input {
@@ -408,7 +474,9 @@ export class Right implements Input {
   isLeft (): boolean { return false }
   isRight (): boolean { return true }
   isPlace (): boolean { return false }
-  handle (): void { move(1, 0) }
+  handle (): void {
+    map[playerY + 0][playerX + 1].move(1, 0)
+  }
 }
 
 export class Place implements Input {
@@ -489,21 +557,6 @@ export function explode (x: number, y: number, type: Tile): void {
   }
 }
 
-export function move (x: number, y: number): void {
-  if (
-    map[playerY + y][playerX + x].isAir() ||
-    map[playerY + y][playerX + x].isFire()
-  ) {
-    playerY += y
-    playerX += x
-  } else if (map[playerY + y][playerX + x].isExtraBomb()) {
-    playerY += y
-    playerX += x
-    bombs++
-    map[playerY][playerX] = new Air()
-  }
-}
-
 export function placeBomb (): void {
   if (bombs > 0) {
     map[playerY][playerX] = new Bomb()
@@ -572,7 +625,7 @@ function updateTile (x: number, y: number): void {
   } else if (map[y][x].isMonsterRight()) {
     if (map[y][x + 1].isAir()) {
       map[y][x] = new Air()
-      map[y][x + 1] = new MonsterRight()
+      map[y][x + 1] = new TmpMonsterRight()
     } else {
       map[y][x] = new MonsterDown()
     }
@@ -606,9 +659,8 @@ function throwExpression (message: string): never {
 
 function createGraphics (): CanvasRenderingContext2D {
   const canvas = document.getElementById('GameCanvas') as HTMLCanvasElement
-  const g = canvas.getContext('2d')
+  const g = canvas.getContext('2d') ?? throwExpression('Cannot find the GameCanvas')
 
-  if (g === null) throw new Error('Cannot find the GameCanvas')
   g.clearRect(0, 0, canvas.width, canvas.height)
   return g
 }

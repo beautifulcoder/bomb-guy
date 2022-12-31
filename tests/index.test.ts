@@ -7,12 +7,12 @@ import {
   Right,
   Place,
   playerX,
+  playerY,
   bombs,
   map,
   inputs,
   gameOver,
   placeBomb,
-  move,
   update,
   handleInputs,
   explode,
@@ -28,7 +28,7 @@ describe('bomb man', () => {
   })
 
   it('move player', () => {
-    move(1, 0)
+    map[playerY + 0][playerX + 1].move(1, 0)
     equal(2, playerX)
   })
 
