@@ -38,6 +38,7 @@ interface Tile {
   isMonsterDown: () => boolean
   isTmpMonsterDown: () => boolean
   isMonsterLeft: () => boolean
+  color: (g: CanvasRenderingContext2D) => void
 }
 
 class Air implements Tile {
@@ -56,6 +57,7 @@ class Air implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+  color (g: CanvasRenderingContext2D): void { }
 }
 
 class Unbreakable implements Tile {
@@ -74,6 +76,9 @@ class Unbreakable implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+  color (g: CanvasRenderingContext2D): void {
+    g.fillStyle = '#999999'
+  }
 }
 
 class Stone implements Tile {
@@ -92,6 +97,9 @@ class Stone implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+  color (g: CanvasRenderingContext2D): void {
+    g.fillStyle = '#0000cc'
+  }
 }
 
 class Bomb implements Tile {
@@ -110,6 +118,9 @@ class Bomb implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+  color (g: CanvasRenderingContext2D): void {
+    g.fillStyle = '#770000'
+  }
 }
 
 class BombClose implements Tile {
@@ -128,6 +139,9 @@ class BombClose implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+  color (g: CanvasRenderingContext2D): void {
+    g.fillStyle = '#cc0000'
+  }
 }
 
 class BombReallyClose implements Tile {
@@ -146,6 +160,9 @@ class BombReallyClose implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+  color (g: CanvasRenderingContext2D): void {
+    g.fillStyle = '#ff0000'
+  }
 }
 
 class TmpFire implements Tile {
@@ -164,6 +181,7 @@ class TmpFire implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+  color (g: CanvasRenderingContext2D): void { }
 }
 
 export class Fire implements Tile {
@@ -182,6 +200,9 @@ export class Fire implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+  color (g: CanvasRenderingContext2D): void {
+    g.fillStyle = '#ffcc00'
+  }
 }
 
 class ExtraBomb implements Tile {
@@ -200,6 +221,9 @@ class ExtraBomb implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+  color (g: CanvasRenderingContext2D): void {
+    g.fillStyle = '#00cc00'
+  }
 }
 
 class MonsterUp implements Tile {
@@ -218,6 +242,9 @@ class MonsterUp implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+  color (g: CanvasRenderingContext2D): void {
+    g.fillStyle = '#cc00cc'
+  }
 }
 
 class MonsterRight implements Tile {
@@ -236,6 +263,9 @@ class MonsterRight implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+  color (g: CanvasRenderingContext2D): void {
+    g.fillStyle = '#cc00cc'
+  }
 }
 
 class TmpMonsterRight implements Tile {
@@ -254,6 +284,7 @@ class TmpMonsterRight implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+  color (g: CanvasRenderingContext2D): void { }
 }
 
 class MonsterDown implements Tile {
@@ -272,6 +303,9 @@ class MonsterDown implements Tile {
   isMonsterDown (): boolean { return true }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+  color (g: CanvasRenderingContext2D): void {
+    g.fillStyle = '#cc00cc'
+  }
 }
 
 class TmpMonsterDown implements Tile {
@@ -290,6 +324,7 @@ class TmpMonsterDown implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return true }
   isMonsterLeft (): boolean { return false }
+  color (g: CanvasRenderingContext2D): void { }
 }
 
 class MonsterLeft implements Tile {
@@ -308,6 +343,9 @@ class MonsterLeft implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return true }
+  color (g: CanvasRenderingContext2D): void {
+    g.fillStyle = '#cc00cc'
+  }
 }
 
 interface Input {
@@ -576,19 +614,7 @@ function drawMap (g: CanvasRenderingContext2D): void {
 }
 
 function colorOfTile (g: CanvasRenderingContext2D, y: number, x: number): void {
-  if (map[y][x].isUnbreakable()) g.fillStyle = '#999999'
-  else if (map[y][x].isStone()) g.fillStyle = '#0000cc'
-  else if (map[y][x].isExtraBomb()) g.fillStyle = '#00cc00'
-  else if (map[y][x].isFire()) g.fillStyle = '#ffcc00'
-  else if (
-    map[y][x].isMonsterUp() ||
-    map[y][x].isMonsterLeft() ||
-    map[y][x].isMonsterRight() ||
-    map[y][x].isMonsterDown()
-  ) g.fillStyle = '#cc00cc'
-  else if (map[y][x].isBomb()) g.fillStyle = '#770000'
-  else if (map[y][x].isBombClose()) g.fillStyle = '#cc0000'
-  else if (map[y][x].isBombReallyClose()) g.fillStyle = '#ff0000'
+  map[y][x].color(g)
 }
 
 function drawPlayer (g: CanvasRenderingContext2D): void {
