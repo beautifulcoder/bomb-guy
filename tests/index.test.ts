@@ -12,7 +12,6 @@ import {
   map,
   inputs,
   gameOver,
-  placeBomb,
   update,
   handleInputs,
   explode,
@@ -23,7 +22,9 @@ transformMap()
 
 describe('bomb man', () => {
   it('place bomb', () => {
-    placeBomb()
+    inputs.push(new Place())
+    inputs.push(new Place())
+    handleInputs()
     equal(0, bombs)
   })
 

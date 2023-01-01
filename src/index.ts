@@ -40,6 +40,7 @@ interface Tile {
   isMonsterLeft: () => boolean
   draw: (g: CanvasRenderingContext2D, x: number, y: number) => void
   move: (x: number, y: number) => void
+  placeBomb: () => void
 }
 
 class Air implements Tile {
@@ -66,6 +67,10 @@ class Air implements Tile {
     playerY += y
     playerX += x
   }
+
+  placeBomb (): void {
+    map[playerY][playerX] = new Bomb()
+  }
 }
 
 class Unbreakable implements Tile {
@@ -91,6 +96,7 @@ class Unbreakable implements Tile {
   }
 
   move (x: number, y: number): void { }
+  placeBomb (): void { }
 }
 
 class Stone implements Tile {
@@ -116,6 +122,7 @@ class Stone implements Tile {
   }
 
   move (x: number, y: number): void { }
+  placeBomb (): void { }
 }
 
 class Bomb implements Tile {
@@ -141,6 +148,7 @@ class Bomb implements Tile {
   }
 
   move (x: number, y: number): void { }
+  placeBomb (): void { }
 }
 
 class BombClose implements Tile {
@@ -166,6 +174,7 @@ class BombClose implements Tile {
   }
 
   move (x: number, y: number): void { }
+  placeBomb (): void { }
 }
 
 class BombReallyClose implements Tile {
@@ -191,6 +200,7 @@ class BombReallyClose implements Tile {
   }
 
   move (x: number, y: number): void { }
+  placeBomb (): void { }
 }
 
 class TmpFire implements Tile {
@@ -215,6 +225,7 @@ class TmpFire implements Tile {
   }
 
   move (x: number, y: number): void { }
+  placeBomb (): void { }
 }
 
 export class Fire implements Tile {
@@ -242,6 +253,10 @@ export class Fire implements Tile {
   move (x: number, y: number): void {
     playerY += y
     playerX += x
+  }
+
+  placeBomb (): void {
+    map[playerY][playerX] = new Bomb()
   }
 }
 
@@ -273,6 +288,10 @@ class ExtraBomb implements Tile {
     bombs++
     map[playerY][playerX] = new Air()
   }
+
+  placeBomb (): void {
+    map[playerY][playerX] = new Bomb()
+  }
 }
 
 class MonsterUp implements Tile {
@@ -298,6 +317,7 @@ class MonsterUp implements Tile {
   }
 
   move (x: number, y: number): void { }
+  placeBomb (): void { }
 }
 
 class MonsterRight implements Tile {
@@ -323,6 +343,7 @@ class MonsterRight implements Tile {
   }
 
   move (x: number, y: number): void { }
+  placeBomb (): void { }
 }
 
 class TmpMonsterRight implements Tile {
@@ -347,6 +368,7 @@ class TmpMonsterRight implements Tile {
   }
 
   move (x: number, y: number): void { }
+  placeBomb (): void { }
 }
 
 class MonsterDown implements Tile {
@@ -372,6 +394,7 @@ class MonsterDown implements Tile {
   }
 
   move (x: number, y: number): void { }
+  placeBomb (): void { }
 }
 
 class TmpMonsterDown implements Tile {
@@ -396,6 +419,7 @@ class TmpMonsterDown implements Tile {
   }
 
   move (x: number, y: number): void { }
+  placeBomb (): void { }
 }
 
 class MonsterLeft implements Tile {
@@ -421,6 +445,7 @@ class MonsterLeft implements Tile {
   }
 
   move (x: number, y: number): void { }
+  placeBomb (): void { }
 }
 
 interface Input {
@@ -485,7 +510,12 @@ export class Place implements Input {
   isLeft (): boolean { return false }
   isRight (): boolean { return false }
   isPlace (): boolean { return true }
-  handle (): void { placeBomb() }
+  handle (): void {
+    if (bombs > 0) {
+      map[playerY][playerX].placeBomb()
+      bombs--
+    }
+  }
 }
 
 export let playerX = 1
@@ -554,13 +584,6 @@ export function explode (x: number, y: number, type: Tile): void {
       bombs++
     }
     map[y][x] = type
-  }
-}
-
-export function placeBomb (): void {
-  if (bombs > 0) {
-    map[playerY][playerX] = new Bomb()
-    bombs--
   }
 }
 
