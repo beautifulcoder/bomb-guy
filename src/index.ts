@@ -38,6 +38,7 @@ interface Tile {
   isMonsterDown: () => boolean
   isTmpMonsterDown: () => boolean
   isMonsterLeft: () => boolean
+  isGameOver: () => boolean
   draw: (g: CanvasRenderingContext2D, x: number, y: number) => void
   move: (x: number, y: number) => void
   placeBomb: () => void
@@ -59,6 +60,7 @@ class Air implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+  isGameOver (): boolean { return false }
 
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
   }
@@ -89,6 +91,7 @@ class Unbreakable implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+  isGameOver (): boolean { return false }
 
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#999999'
@@ -115,6 +118,7 @@ class Stone implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+  isGameOver (): boolean { return false }
 
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#0000cc'
@@ -134,13 +138,14 @@ class Bomb implements Tile {
   isBombReallyClose (): boolean { return false }
   isTmpFire (): boolean { return false }
   isFire (): boolean { return false }
-  isExtraBomb (): boolean { return false }
+  isExtraBomb (): boolean { return true }
   isMonsterUp (): boolean { return false }
   isMonsterRight (): boolean { return false }
   isTmpMonsterRight (): boolean { return false }
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+  isGameOver (): boolean { return false }
 
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#770000'
@@ -160,13 +165,14 @@ class BombClose implements Tile {
   isBombReallyClose (): boolean { return false }
   isTmpFire (): boolean { return false }
   isFire (): boolean { return false }
-  isExtraBomb (): boolean { return false }
+  isExtraBomb (): boolean { return true }
   isMonsterUp (): boolean { return false }
   isMonsterRight (): boolean { return false }
   isTmpMonsterRight (): boolean { return false }
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+  isGameOver (): boolean { return false }
 
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#cc0000'
@@ -186,13 +192,14 @@ class BombReallyClose implements Tile {
   isBombReallyClose (): boolean { return true }
   isTmpFire (): boolean { return false }
   isFire (): boolean { return false }
-  isExtraBomb (): boolean { return false }
+  isExtraBomb (): boolean { return true }
   isMonsterUp (): boolean { return false }
   isMonsterRight (): boolean { return false }
   isTmpMonsterRight (): boolean { return false }
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+  isGameOver (): boolean { return false }
 
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#ff0000'
@@ -219,6 +226,7 @@ class TmpFire implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+  isGameOver (): boolean { return false }
 
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
@@ -244,6 +252,7 @@ export class Fire implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+  isGameOver (): boolean { return true }
 
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#ffcc00'
@@ -276,6 +285,7 @@ class ExtraBomb implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+  isGameOver (): boolean { return false }
 
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#00cc00'
@@ -310,6 +320,7 @@ class MonsterUp implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+  isGameOver (): boolean { return true }
 
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#cc00cc'
@@ -336,6 +347,7 @@ class MonsterRight implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+  isGameOver (): boolean { return true }
 
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#cc00cc'
@@ -362,6 +374,7 @@ class TmpMonsterRight implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+  isGameOver (): boolean { return false }
 
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
@@ -387,6 +400,7 @@ class MonsterDown implements Tile {
   isMonsterDown (): boolean { return true }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return false }
+  isGameOver (): boolean { return true }
 
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#cc00cc'
@@ -413,6 +427,7 @@ class TmpMonsterDown implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return true }
   isMonsterLeft (): boolean { return false }
+  isGameOver (): boolean { return false }
 
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
@@ -438,6 +453,7 @@ class MonsterLeft implements Tile {
   isMonsterDown (): boolean { return false }
   isTmpMonsterDown (): boolean { return false }
   isMonsterLeft (): boolean { return true }
+  isGameOver (): boolean { return true }
 
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
     g.fillStyle = '#cc00cc'
@@ -577,9 +593,7 @@ export function explode (x: number, y: number, type: Tile): void {
     else map[y][x] = type
   } else if (!map[y][x].isUnbreakable()) {
     if (
-      map[y][x].isBomb() ||
-      map[y][x].isBombClose() ||
-      map[y][x].isBombReallyClose()
+      map[y][x].isExtraBomb()
     ) {
       bombs++
     }
@@ -603,11 +617,7 @@ export function handleInputs (): void {
 
 function handleGameOver (): void {
   if (
-    map[playerY][playerX].isFire() ||
-    map[playerY][playerX].isMonsterDown() ||
-    map[playerY][playerX].isMonsterUp() ||
-    map[playerY][playerX].isMonsterLeft() ||
-    map[playerY][playerX].isMonsterRight()
+    map[playerY][playerX].isGameOver()
   ) gameOver = true
 }
 
