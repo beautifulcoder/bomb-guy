@@ -405,9 +405,7 @@ class MonsterUp implements Tile {
     if (map[y - 1][x].isAir()) {
       map[y][x] = new Air()
       map[y - 1][x] = new MonsterUp()
-    } else {
-      map[y][x] = new MonsterRight()
-    }
+    } else map[y][x] = new MonsterRight()
   }
 
   placeBomb (): void { }
@@ -446,9 +444,7 @@ class MonsterRight implements Tile {
     if (map[y][x + 1].isAir()) {
       map[y][x] = new Air()
       map[y][x + 1] = new TmpMonsterRight()
-    } else {
-      map[y][x] = new MonsterDown()
-    }
+    } else map[y][x] = new MonsterDown()
   }
 
   placeBomb (): void { }
@@ -522,9 +518,7 @@ class MonsterDown implements Tile {
     if (map[y + 1][x].isAir()) {
       map[y][x] = new Air()
       map[y + 1][x] = new TmpMonsterDown()
-    } else {
-      map[y][x] = new MonsterLeft()
-    }
+    } else map[y][x] = new MonsterLeft()
   }
 
   placeBomb (): void { }
@@ -598,9 +592,7 @@ class MonsterLeft implements Tile {
     if (map[y][x - 1].isAir()) {
       map[y][x] = new Air()
       map[y][x - 1] = new MonsterLeft()
-    } else {
-      map[y][x] = new MonsterUp()
-    }
+    } else map[y][x] = new MonsterUp()
   }
 
   placeBomb (): void { }
