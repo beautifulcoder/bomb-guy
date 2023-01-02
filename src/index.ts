@@ -41,6 +41,7 @@ interface Tile {
   isGameOver: () => boolean
   draw: (g: CanvasRenderingContext2D, x: number, y: number) => void
   move: (x: number, y: number) => void
+  update: (x: number, y: number) => void
   placeBomb: () => void
 }
 
@@ -69,6 +70,8 @@ class Air implements Tile {
     playerY += y
     playerX += x
   }
+
+  update (x: number, y: number): void { }
 
   placeBomb (): void {
     map[playerY][playerX] = new Bomb()
@@ -99,6 +102,7 @@ class Unbreakable implements Tile {
   }
 
   move (x: number, y: number): void { }
+  update (x: number, y: number): void { }
   placeBomb (): void { }
 }
 
@@ -126,6 +130,7 @@ class Stone implements Tile {
   }
 
   move (x: number, y: number): void { }
+  update (x: number, y: number): void { }
   placeBomb (): void { }
 }
 
@@ -153,6 +158,11 @@ class Bomb implements Tile {
   }
 
   move (x: number, y: number): void { }
+
+  update (x: number, y: number): void {
+    map[y][x] = new BombClose()
+  }
+
   placeBomb (): void { }
 }
 
@@ -180,6 +190,11 @@ class BombClose implements Tile {
   }
 
   move (x: number, y: number): void { }
+
+  update (x: number, y: number): void {
+    map[y][x] = new BombReallyClose()
+  }
+
   placeBomb (): void { }
 }
 
@@ -207,6 +222,16 @@ class BombReallyClose implements Tile {
   }
 
   move (x: number, y: number): void { }
+
+  update (x: number, y: number): void {
+    explode(x + 0, y - 1, new Fire())
+    explode(x + 0, y + 1, new TmpFire())
+    explode(x - 1, y + 0, new Fire())
+    explode(x + 1, y + 0, new TmpFire())
+    map[y][x] = new Fire()
+    bombs++
+  }
+
   placeBomb (): void { }
 }
 
@@ -233,6 +258,11 @@ class TmpFire implements Tile {
   }
 
   move (x: number, y: number): void { }
+
+  update (x: number, y: number): void {
+    map[y][x] = new Fire()
+  }
+
   placeBomb (): void { }
 }
 
@@ -262,6 +292,10 @@ export class Fire implements Tile {
   move (x: number, y: number): void {
     playerY += y
     playerX += x
+  }
+
+  update (x: number, y: number): void {
+    map[y][x] = new Air()
   }
 
   placeBomb (): void {
@@ -299,6 +333,8 @@ class ExtraBomb implements Tile {
     map[playerY][playerX] = new Air()
   }
 
+  update (x: number, y: number): void { }
+
   placeBomb (): void {
     map[playerY][playerX] = new Bomb()
   }
@@ -328,6 +364,16 @@ class MonsterUp implements Tile {
   }
 
   move (x: number, y: number): void { }
+
+  update (x: number, y: number): void {
+    if (map[y - 1][x].isAir()) {
+      map[y][x] = new Air()
+      map[y - 1][x] = new MonsterUp()
+    } else {
+      map[y][x] = new MonsterRight()
+    }
+  }
+
   placeBomb (): void { }
 }
 
@@ -355,6 +401,16 @@ class MonsterRight implements Tile {
   }
 
   move (x: number, y: number): void { }
+
+  update (x: number, y: number): void {
+    if (map[y][x + 1].isAir()) {
+      map[y][x] = new Air()
+      map[y][x + 1] = new TmpMonsterRight()
+    } else {
+      map[y][x] = new MonsterDown()
+    }
+  }
+
   placeBomb (): void { }
 }
 
@@ -381,6 +437,11 @@ class TmpMonsterRight implements Tile {
   }
 
   move (x: number, y: number): void { }
+
+  update (x: number, y: number): void {
+    map[y][x] = new MonsterRight()
+  }
+
   placeBomb (): void { }
 }
 
@@ -408,6 +469,16 @@ class MonsterDown implements Tile {
   }
 
   move (x: number, y: number): void { }
+
+  update (x: number, y: number): void {
+    if (map[y + 1][x].isAir()) {
+      map[y][x] = new Air()
+      map[y + 1][x] = new TmpMonsterDown()
+    } else {
+      map[y][x] = new MonsterLeft()
+    }
+  }
+
   placeBomb (): void { }
 }
 
@@ -434,6 +505,11 @@ class TmpMonsterDown implements Tile {
   }
 
   move (x: number, y: number): void { }
+
+  update (x: number, y: number): void {
+    map[y][x] = new MonsterDown()
+  }
+
   placeBomb (): void { }
 }
 
@@ -461,6 +537,16 @@ class MonsterLeft implements Tile {
   }
 
   move (x: number, y: number): void { }
+
+  update (x: number, y: number): void {
+    if (map[y][x - 1].isAir()) {
+      map[y][x] = new Air()
+      map[y][x - 1] = new MonsterLeft()
+    } else {
+      map[y][x] = new MonsterUp()
+    }
+  }
+
   placeBomb (): void { }
 }
 
@@ -630,58 +716,7 @@ function hasDelay (): boolean {
 function updateMap (): void {
   for (let y = 1; y < map.length; y++) {
     for (let x = 1; x < map[y].length; x++) {
-      updateTile(x, y)
-    }
-  }
-}
-
-function updateTile (x: number, y: number): void {
-  if (map[y][x].isBomb()) {
-    map[y][x] = new BombClose()
-  } else if (map[y][x].isBombClose()) {
-    map[y][x] = new BombReallyClose()
-  } else if (map[y][x].isBombReallyClose()) {
-    explode(x + 0, y - 1, new Fire())
-    explode(x + 0, y + 1, new TmpFire())
-    explode(x - 1, y + 0, new Fire())
-    explode(x + 1, y + 0, new TmpFire())
-    map[y][x] = new Fire()
-    bombs++
-  } else if (map[y][x].isTmpFire()) {
-    map[y][x] = new Fire()
-  } else if (map[y][x].isFire()) {
-    map[y][x] = new Air()
-  } else if (map[y][x].isTmpMonsterDown()) {
-    map[y][x] = new MonsterDown()
-  } else if (map[y][x].isTmpMonsterRight()) {
-    map[y][x] = new MonsterRight()
-  } else if (map[y][x].isMonsterRight()) {
-    if (map[y][x + 1].isAir()) {
-      map[y][x] = new Air()
-      map[y][x + 1] = new TmpMonsterRight()
-    } else {
-      map[y][x] = new MonsterDown()
-    }
-  } else if (map[y][x].isMonsterDown()) {
-    if (map[y + 1][x].isAir()) {
-      map[y][x] = new Air()
-      map[y + 1][x] = new TmpMonsterDown()
-    } else {
-      map[y][x] = new MonsterLeft()
-    }
-  } else if (map[y][x].isMonsterLeft()) {
-    if (map[y][x - 1].isAir()) {
-      map[y][x] = new Air()
-      map[y][x - 1] = new MonsterLeft()
-    } else {
-      map[y][x] = new MonsterUp()
-    }
-  } else if (map[y][x].isMonsterUp()) {
-    if (map[y - 1][x].isAir()) {
-      map[y][x] = new Air()
-      map[y - 1][x] = new MonsterUp()
-    } else {
-      map[y][x] = new MonsterRight()
+      map[y][x].update(x, y)
     }
   }
 }
