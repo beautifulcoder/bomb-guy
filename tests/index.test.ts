@@ -14,7 +14,6 @@ import {
   gameOver,
   update,
   handleInputs,
-  explode,
   transformMap
 } from '../src/index'
 
@@ -34,7 +33,7 @@ describe('bomb man', () => {
   })
 
   it('explode bomb', () => {
-    explode(2, 1, new Fire())
+    map[1][2].explode(2, 1, new Fire())
     ok(map[1][2].isFire())
   })
 

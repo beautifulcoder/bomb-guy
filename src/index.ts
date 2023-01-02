@@ -43,6 +43,7 @@ interface Tile {
   move: (x: number, y: number) => void
   update: (x: number, y: number) => void
   placeBomb: () => void
+  explode: (x: number, y: number, fire: Tile) => void
 }
 
 class Air implements Tile {
@@ -76,6 +77,10 @@ class Air implements Tile {
   placeBomb (): void {
     map[playerY][playerX] = new Bomb()
   }
+
+  explode (x: number, y: number, fire: Tile): void {
+    map[y][x] = fire
+  }
 }
 
 class Unbreakable implements Tile {
@@ -104,6 +109,7 @@ class Unbreakable implements Tile {
   move (x: number, y: number): void { }
   update (x: number, y: number): void { }
   placeBomb (): void { }
+  explode (x: number, y: number, fire: Tile): void { }
 }
 
 class Stone implements Tile {
@@ -132,6 +138,11 @@ class Stone implements Tile {
   move (x: number, y: number): void { }
   update (x: number, y: number): void { }
   placeBomb (): void { }
+
+  explode (x: number, y: number, fire: Tile): void {
+    if (Math.random() < 0.1) map[y][x] = new ExtraBomb()
+    else map[y][x] = fire
+  }
 }
 
 class Bomb implements Tile {
@@ -164,6 +175,10 @@ class Bomb implements Tile {
   }
 
   placeBomb (): void { }
+
+  explode (x: number, y: number, fire: Tile): void {
+    map[y][x] = fire
+  }
 }
 
 class BombClose implements Tile {
@@ -196,6 +211,10 @@ class BombClose implements Tile {
   }
 
   placeBomb (): void { }
+
+  explode (x: number, y: number, fire: Tile): void {
+    map[y][x] = fire
+  }
 }
 
 class BombReallyClose implements Tile {
@@ -224,15 +243,19 @@ class BombReallyClose implements Tile {
   move (x: number, y: number): void { }
 
   update (x: number, y: number): void {
-    explode(x + 0, y - 1, new Fire())
-    explode(x + 0, y + 1, new TmpFire())
-    explode(x - 1, y + 0, new Fire())
-    explode(x + 1, y + 0, new TmpFire())
-    map[y][x] = new Fire()
+    map[y - 1][x + 0].explode(x + 0, y - 1, new Fire())
+    map[y + 1][x + 0].explode(x + 0, y + 1, new TmpFire())
+    map[y + 0][x - 1].explode(x - 1, y + 0, new Fire())
+    map[y + 0][x + 1].explode(x + 1, y + 0, new TmpFire())
+    map[y][x].explode(x, y, new Fire())
     bombs++
   }
 
   placeBomb (): void { }
+
+  explode (x: number, y: number, fire: Tile): void {
+    map[y][x] = fire
+  }
 }
 
 class TmpFire implements Tile {
@@ -264,6 +287,10 @@ class TmpFire implements Tile {
   }
 
   placeBomb (): void { }
+
+  explode (x: number, y: number, fire: Tile): void {
+    map[y][x] = fire
+  }
 }
 
 export class Fire implements Tile {
@@ -300,6 +327,10 @@ export class Fire implements Tile {
 
   placeBomb (): void {
     map[playerY][playerX] = new Bomb()
+  }
+
+  explode (x: number, y: number, fire: Tile): void {
+    map[y][x] = fire
   }
 }
 
@@ -338,6 +369,11 @@ class ExtraBomb implements Tile {
   placeBomb (): void {
     map[playerY][playerX] = new Bomb()
   }
+
+  explode (x: number, y: number, fire: Tile): void {
+    bombs++
+    map[y][x] = fire
+  }
 }
 
 class MonsterUp implements Tile {
@@ -375,6 +411,10 @@ class MonsterUp implements Tile {
   }
 
   placeBomb (): void { }
+
+  explode (x: number, y: number, fire: Tile): void {
+    map[y][x] = fire
+  }
 }
 
 class MonsterRight implements Tile {
@@ -412,6 +452,10 @@ class MonsterRight implements Tile {
   }
 
   placeBomb (): void { }
+
+  explode (x: number, y: number, fire: Tile): void {
+    map[y][x] = fire
+  }
 }
 
 class TmpMonsterRight implements Tile {
@@ -443,6 +487,10 @@ class TmpMonsterRight implements Tile {
   }
 
   placeBomb (): void { }
+
+  explode (x: number, y: number, fire: Tile): void {
+    map[y][x] = fire
+  }
 }
 
 class MonsterDown implements Tile {
@@ -480,6 +528,10 @@ class MonsterDown implements Tile {
   }
 
   placeBomb (): void { }
+
+  explode (x: number, y: number, fire: Tile): void {
+    map[y][x] = fire
+  }
 }
 
 class TmpMonsterDown implements Tile {
@@ -511,6 +563,10 @@ class TmpMonsterDown implements Tile {
   }
 
   placeBomb (): void { }
+
+  explode (x: number, y: number, fire: Tile): void {
+    map[y][x] = fire
+  }
 }
 
 class MonsterLeft implements Tile {
@@ -548,6 +604,10 @@ class MonsterLeft implements Tile {
   }
 
   placeBomb (): void { }
+
+  explode (x: number, y: number, fire: Tile): void {
+    map[y][x] = fire
+  }
 }
 
 interface Input {
@@ -672,20 +732,6 @@ export const inputs: Input[] = []
 let delay = 0
 export let bombs = 1
 export let gameOver = false
-
-export function explode (x: number, y: number, type: Tile): void {
-  if (map[y][x].isStone()) {
-    if (Math.random() < 0.1) map[y][x] = new ExtraBomb()
-    else map[y][x] = type
-  } else if (!map[y][x].isUnbreakable()) {
-    if (
-      map[y][x].isExtraBomb()
-    ) {
-      bombs++
-    }
-    map[y][x] = type
-  }
-}
 
 export function update (): void {
   handleInputs()
