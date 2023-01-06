@@ -669,6 +669,12 @@ export class Player {
     return false
   }
 
+  handleGameOver (): void {
+    if (
+      map[this.y][this.x].isGameOver()
+    ) this.gameOver = true
+  }
+
   draw (g: CanvasRenderingContext2D): void {
     if (!player.gameOver) {
       g.fillStyle = '#00ff00'
@@ -803,6 +809,7 @@ export const inputs: Input[] = []
 
 export function update (): void {
   handleInputs()
+  player.handleGameOver()
   if (player.hasDelay()) return
   updateMap()
 }
@@ -812,13 +819,6 @@ export function handleInputs (): void {
     const input = inputs.pop() ?? throwExpression('Invalid key input')
     input.handle()
   }
-  handleGameOver()
-}
-
-function handleGameOver (): void {
-  if (
-    map[player.y][player.x].isGameOver()
-  ) player.gameOver = true
 }
 
 function updateMap (): void {
