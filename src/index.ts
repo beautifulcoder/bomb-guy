@@ -663,6 +663,12 @@ export class Player {
     }
   }
 
+  hasDelay (): boolean {
+    if (--this.delay > 0) return true
+    this.delay = DELAY
+    return false
+  }
+
   draw (g: CanvasRenderingContext2D): void {
     if (!player.gameOver) {
       g.fillStyle = '#00ff00'
@@ -797,7 +803,7 @@ export const inputs: Input[] = []
 
 export function update (): void {
   handleInputs()
-  if (hasDelay()) return
+  if (player.hasDelay()) return
   updateMap()
 }
 
@@ -813,12 +819,6 @@ function handleGameOver (): void {
   if (
     map[player.y][player.x].isGameOver()
   ) player.gameOver = true
-}
-
-function hasDelay (): boolean {
-  if (--player.delay > 0) return true
-  player.delay = DELAY
-  return false
 }
 
 function updateMap (): void {
