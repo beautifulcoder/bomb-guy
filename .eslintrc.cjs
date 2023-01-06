@@ -18,7 +18,6 @@ module.exports = {
     "spellcheck"
   ],
   "rules": {
-    "no-unmodified-loop-condition": ["warn"],
     "spellcheck/spell-checker": [
       "warn", {
         "skipWords": ["rect", "keydown"]

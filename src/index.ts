@@ -662,6 +662,13 @@ export class Player {
       this.bombs--
     }
   }
+
+  draw (g: CanvasRenderingContext2D): void {
+    if (!player.gameOver) {
+      g.fillStyle = '#00ff00'
+      g.fillRect(player.x * TILE_SIZE, player.y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+    }
+  }
 }
 
 interface Input {
@@ -837,7 +844,7 @@ function createGraphics (): CanvasRenderingContext2D {
 function draw (): void {
   const g = createGraphics()
   drawMap(g)
-  drawPlayer(g)
+  player.draw(g)
 }
 
 function drawMap (g: CanvasRenderingContext2D): void {
@@ -845,13 +852,6 @@ function drawMap (g: CanvasRenderingContext2D): void {
     for (let x = 0; x < map[y].length; x++) {
       map[y][x].draw(g, x, y)
     }
-  }
-}
-
-function drawPlayer (g: CanvasRenderingContext2D): void {
-  g.fillStyle = '#00ff00'
-  if (!player.gameOver) {
-    g.fillRect(player.x * TILE_SIZE, player.y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
   }
 }
 
