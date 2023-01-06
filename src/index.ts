@@ -47,6 +47,8 @@ interface Tile {
 }
 
 class Air implements Tile {
+  constructor (private readonly player: Player) { }
+
   isAir (): boolean { return true }
   isUnbreakable (): boolean { return false }
   isStone (): boolean { return false }
@@ -68,14 +70,14 @@ class Air implements Tile {
   }
 
   move (x: number, y: number): void {
-    playerY += y
-    playerX += x
+    this.player.y += y
+    this.player.x += x
   }
 
   update (x: number, y: number): void { }
 
   placeBomb (): void {
-    map[playerY][playerX] = new Bomb()
+    map[this.player.y][this.player.x] = new Bomb(this.player)
   }
 
   explode (x: number, y: number, fire: Tile): void {
@@ -113,6 +115,8 @@ class Unbreakable implements Tile {
 }
 
 class Stone implements Tile {
+  constructor (private readonly player: Player) { }
+
   isAir (): boolean { return false }
   isUnbreakable (): boolean { return false }
   isStone (): boolean { return true }
@@ -140,12 +144,14 @@ class Stone implements Tile {
   placeBomb (): void { }
 
   explode (x: number, y: number, fire: Tile): void {
-    if (Math.random() < 0.1) map[y][x] = new ExtraBomb()
+    if (Math.random() < 0.1) map[y][x] = new ExtraBomb(this.player)
     else map[y][x] = fire
   }
 }
 
 class Bomb implements Tile {
+  constructor (private readonly player: Player) { }
+
   isAir (): boolean { return false }
   isUnbreakable (): boolean { return false }
   isStone (): boolean { return false }
@@ -171,7 +177,7 @@ class Bomb implements Tile {
   move (x: number, y: number): void { }
 
   update (x: number, y: number): void {
-    map[y][x] = new BombClose()
+    map[y][x] = new BombClose(this.player)
   }
 
   placeBomb (): void { }
@@ -182,6 +188,8 @@ class Bomb implements Tile {
 }
 
 class BombClose implements Tile {
+  constructor (private readonly player: Player) { }
+
   isAir (): boolean { return false }
   isUnbreakable (): boolean { return false }
   isStone (): boolean { return false }
@@ -207,7 +215,7 @@ class BombClose implements Tile {
   move (x: number, y: number): void { }
 
   update (x: number, y: number): void {
-    map[y][x] = new BombReallyClose()
+    map[y][x] = new BombReallyClose(this.player)
   }
 
   placeBomb (): void { }
@@ -218,6 +226,8 @@ class BombClose implements Tile {
 }
 
 class BombReallyClose implements Tile {
+  constructor (private readonly player: Player) { }
+
   isAir (): boolean { return false }
   isUnbreakable (): boolean { return false }
   isStone (): boolean { return false }
@@ -243,12 +253,12 @@ class BombReallyClose implements Tile {
   move (x: number, y: number): void { }
 
   update (x: number, y: number): void {
-    map[y - 1][x + 0].explode(x + 0, y - 1, new Fire())
-    map[y + 1][x + 0].explode(x + 0, y + 1, new TmpFire())
-    map[y + 0][x - 1].explode(x - 1, y + 0, new Fire())
-    map[y + 0][x + 1].explode(x + 1, y + 0, new TmpFire())
-    map[y][x].explode(x, y, new Fire())
-    bombs++
+    map[y - 1][x + 0].explode(x + 0, y - 1, new Fire(this.player))
+    map[y + 1][x + 0].explode(x + 0, y + 1, new TmpFire(this.player))
+    map[y + 0][x - 1].explode(x - 1, y + 0, new Fire(this.player))
+    map[y + 0][x + 1].explode(x + 1, y + 0, new TmpFire(this.player))
+    map[y][x].explode(x, y, new Fire(this.player))
+    this.player.bombs++
   }
 
   placeBomb (): void { }
@@ -259,6 +269,8 @@ class BombReallyClose implements Tile {
 }
 
 class TmpFire implements Tile {
+  constructor (private readonly player: Player) { }
+
   isAir (): boolean { return false }
   isUnbreakable (): boolean { return false }
   isStone (): boolean { return false }
@@ -283,7 +295,7 @@ class TmpFire implements Tile {
   move (x: number, y: number): void { }
 
   update (x: number, y: number): void {
-    map[y][x] = new Fire()
+    map[y][x] = new Fire(this.player)
   }
 
   placeBomb (): void { }
@@ -294,6 +306,8 @@ class TmpFire implements Tile {
 }
 
 export class Fire implements Tile {
+  constructor (private readonly player: Player) { }
+
   isAir (): boolean { return false }
   isUnbreakable (): boolean { return false }
   isStone (): boolean { return false }
@@ -317,16 +331,16 @@ export class Fire implements Tile {
   }
 
   move (x: number, y: number): void {
-    playerY += y
-    playerX += x
+    this.player.y += y
+    this.player.x += x
   }
 
   update (x: number, y: number): void {
-    map[y][x] = new Air()
+    map[y][x] = new Air(this.player)
   }
 
   placeBomb (): void {
-    map[playerY][playerX] = new Bomb()
+    map[this.player.y][this.player.x] = new Bomb(this.player)
   }
 
   explode (x: number, y: number, fire: Tile): void {
@@ -335,6 +349,8 @@ export class Fire implements Tile {
 }
 
 class ExtraBomb implements Tile {
+  constructor (private readonly player: Player) { }
+
   isAir (): boolean { return false }
   isUnbreakable (): boolean { return false }
   isStone (): boolean { return false }
@@ -358,25 +374,27 @@ class ExtraBomb implements Tile {
   }
 
   move (x: number, y: number): void {
-    playerY += y
-    playerX += x
-    bombs++
-    map[playerY][playerX] = new Air()
+    this.player.y += y
+    this.player.x += x
+    this.player.bombs++
+    map[this.player.y][this.player.x] = new Air(this.player)
   }
 
   update (x: number, y: number): void { }
 
   placeBomb (): void {
-    map[playerY][playerX] = new Bomb()
+    map[player.y][player.x] = new Bomb(this.player)
   }
 
   explode (x: number, y: number, fire: Tile): void {
-    bombs++
+    this.player.bombs++
     map[y][x] = fire
   }
 }
 
 class MonsterUp implements Tile {
+  constructor (private readonly player: Player) { }
+
   isAir (): boolean { return false }
   isUnbreakable (): boolean { return false }
   isStone (): boolean { return false }
@@ -403,9 +421,9 @@ class MonsterUp implements Tile {
 
   update (x: number, y: number): void {
     if (map[y - 1][x].isAir()) {
-      map[y][x] = new Air()
-      map[y - 1][x] = new MonsterUp()
-    } else map[y][x] = new MonsterRight()
+      map[y][x] = new Air(this.player)
+      map[y - 1][x] = new MonsterUp(this.player)
+    } else map[y][x] = new MonsterRight(this.player)
   }
 
   placeBomb (): void { }
@@ -416,6 +434,8 @@ class MonsterUp implements Tile {
 }
 
 class MonsterRight implements Tile {
+  constructor (private readonly player: Player) { }
+
   isAir (): boolean { return false }
   isUnbreakable (): boolean { return false }
   isStone (): boolean { return false }
@@ -442,9 +462,9 @@ class MonsterRight implements Tile {
 
   update (x: number, y: number): void {
     if (map[y][x + 1].isAir()) {
-      map[y][x] = new Air()
-      map[y][x + 1] = new TmpMonsterRight()
-    } else map[y][x] = new MonsterDown()
+      map[y][x] = new Air(this.player)
+      map[y][x + 1] = new TmpMonsterRight(this.player)
+    } else map[y][x] = new MonsterDown(this.player)
   }
 
   placeBomb (): void { }
@@ -455,6 +475,8 @@ class MonsterRight implements Tile {
 }
 
 class TmpMonsterRight implements Tile {
+  constructor (private readonly player: Player) { }
+
   isAir (): boolean { return false }
   isUnbreakable (): boolean { return false }
   isStone (): boolean { return false }
@@ -479,7 +501,7 @@ class TmpMonsterRight implements Tile {
   move (x: number, y: number): void { }
 
   update (x: number, y: number): void {
-    map[y][x] = new MonsterRight()
+    map[y][x] = new MonsterRight(this.player)
   }
 
   placeBomb (): void { }
@@ -490,6 +512,8 @@ class TmpMonsterRight implements Tile {
 }
 
 class MonsterDown implements Tile {
+  constructor (private readonly player: Player) { }
+
   isAir (): boolean { return false }
   isUnbreakable (): boolean { return false }
   isStone (): boolean { return false }
@@ -516,9 +540,9 @@ class MonsterDown implements Tile {
 
   update (x: number, y: number): void {
     if (map[y + 1][x].isAir()) {
-      map[y][x] = new Air()
-      map[y + 1][x] = new TmpMonsterDown()
-    } else map[y][x] = new MonsterLeft()
+      map[y][x] = new Air(this.player)
+      map[y + 1][x] = new TmpMonsterDown(this.player)
+    } else map[y][x] = new MonsterLeft(this.player)
   }
 
   placeBomb (): void { }
@@ -529,6 +553,8 @@ class MonsterDown implements Tile {
 }
 
 class TmpMonsterDown implements Tile {
+  constructor (private readonly player: Player) { }
+
   isAir (): boolean { return false }
   isUnbreakable (): boolean { return false }
   isStone (): boolean { return false }
@@ -553,7 +579,7 @@ class TmpMonsterDown implements Tile {
   move (x: number, y: number): void { }
 
   update (x: number, y: number): void {
-    map[y][x] = new MonsterDown()
+    map[y][x] = new MonsterDown(this.player)
   }
 
   placeBomb (): void { }
@@ -564,6 +590,8 @@ class TmpMonsterDown implements Tile {
 }
 
 class MonsterLeft implements Tile {
+  constructor (private readonly player: Player) { }
+
   isAir (): boolean { return false }
   isUnbreakable (): boolean { return false }
   isStone (): boolean { return false }
@@ -590,15 +618,49 @@ class MonsterLeft implements Tile {
 
   update (x: number, y: number): void {
     if (map[y][x - 1].isAir()) {
-      map[y][x] = new Air()
-      map[y][x - 1] = new MonsterLeft()
-    } else map[y][x] = new MonsterUp()
+      map[y][x] = new Air(this.player)
+      map[y][x - 1] = new MonsterLeft(this.player)
+    } else map[y][x] = new MonsterUp(this.player)
   }
 
   placeBomb (): void { }
 
   explode (x: number, y: number, fire: Tile): void {
     map[y][x] = fire
+  }
+}
+
+export class Player {
+  x = 1
+  y = 1
+
+  delay = 0
+  bombs = 1
+  gameOver = false
+
+  constructor (private readonly map: Tile[][]) { }
+
+  moveUp (): void {
+    this.map[this.y + -1][this.x + 0].move(0, -1)
+  }
+
+  moveDown (): void {
+    this.map[this.y + 1][this.x + 0].move(0, 1)
+  }
+
+  moveLeft (): void {
+    this.map[this.y + 0][this.x + -1].move(-1, 0)
+  }
+
+  moveRight (): void {
+    this.map[this.y + 0][this.x + 1].move(1, 0)
+  }
+
+  placeBomb (): void {
+    if (this.bombs > 0) {
+      this.map[this.y][this.x].placeBomb()
+      this.bombs--
+    }
   }
 }
 
@@ -612,6 +674,8 @@ interface Input {
 }
 
 export class Up implements Input {
+  constructor (private readonly player: Player) { }
+
   isUp (): boolean { return true }
   isDown (): boolean { return false }
   isLeft (): boolean { return false }
@@ -619,11 +683,13 @@ export class Up implements Input {
   isPlace (): boolean { return false }
 
   handle (): void {
-    map[playerY + -1][playerX + 0].move(0, -1)
+    this.player.moveUp()
   }
 }
 
 export class Down implements Input {
+  constructor (private readonly player: Player) { }
+
   isUp (): boolean { return false }
   isDown (): boolean { return true }
   isLeft (): boolean { return false }
@@ -631,11 +697,13 @@ export class Down implements Input {
   isPlace (): boolean { return false }
 
   handle (): void {
-    map[playerY + 1][playerX + 0].move(0, 1)
+    this.player.moveDown()
   }
 }
 
 export class Left implements Input {
+  constructor (private readonly player: Player) { }
+
   isUp (): boolean { return false }
   isDown (): boolean { return false }
   isLeft (): boolean { return true }
@@ -643,37 +711,36 @@ export class Left implements Input {
   isPlace (): boolean { return false }
 
   handle (): void {
-    map[playerY + 0][playerX + -1].move(-1, 0)
+    this.player.moveLeft()
   }
 }
 
 export class Right implements Input {
+  constructor (private readonly player: Player) { }
+
   isUp (): boolean { return false }
   isDown (): boolean { return false }
   isLeft (): boolean { return false }
   isRight (): boolean { return true }
   isPlace (): boolean { return false }
   handle (): void {
-    map[playerY + 0][playerX + 1].move(1, 0)
+    this.player.moveRight()
   }
 }
 
 export class Place implements Input {
+  constructor (private readonly player: Player) { }
+
   isUp (): boolean { return false }
   isDown (): boolean { return false }
   isLeft (): boolean { return false }
   isRight (): boolean { return false }
   isPlace (): boolean { return true }
   handle (): void {
-    if (bombs > 0) {
-      map[playerY][playerX].placeBomb()
-      bombs--
-    }
+    this.player.placeBomb()
   }
 }
 
-export let playerX = 1
-export let playerY = 1
 export const rawMap: RawTile[][] = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1],
   [1, 0, 0, 2, 2, 2, 2, 2, 1],
@@ -686,31 +753,31 @@ export const rawMap: RawTile[][] = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1]
 ]
 
-export let map: Tile[][]
+export const map: Tile[][] = new Array(rawMap.length)
+export const player = new Player(map)
 
 function transformTile (tile: RawTile): Tile {
   switch (tile) {
-    case RawTile.AIR: return new Air()
+    case RawTile.AIR: return new Air(player)
     case RawTile.UNBREAKABLE: return new Unbreakable()
-    case RawTile.STONE: return new Stone()
-    case RawTile.BOMB: return new Bomb()
-    case RawTile.BOMB_CLOSE: return new BombClose()
-    case RawTile.BOMB_REALLY_CLOSE: return new BombReallyClose()
-    case RawTile.TMP_FIRE: return new TmpFire()
-    case RawTile.FIRE: return new Fire()
-    case RawTile.EXTRA_BOMB: return new ExtraBomb()
-    case RawTile.MONSTER_UP: return new MonsterUp()
-    case RawTile.MONSTER_RIGHT: return new MonsterRight()
-    case RawTile.TMP_MONSTER_RIGHT: return new TmpMonsterRight()
-    case RawTile.MONSTER_DOWN: return new MonsterDown()
-    case RawTile.TMP_MONSTER_DOWN: return new TmpMonsterDown()
-    case RawTile.MONSTER_LEFT: return new MonsterLeft()
+    case RawTile.STONE: return new Stone(player)
+    case RawTile.BOMB: return new Bomb(player)
+    case RawTile.BOMB_CLOSE: return new BombClose(player)
+    case RawTile.BOMB_REALLY_CLOSE: return new BombReallyClose(player)
+    case RawTile.TMP_FIRE: return new TmpFire(player)
+    case RawTile.FIRE: return new Fire(player)
+    case RawTile.EXTRA_BOMB: return new ExtraBomb(player)
+    case RawTile.MONSTER_UP: return new MonsterUp(player)
+    case RawTile.MONSTER_RIGHT: return new MonsterRight(player)
+    case RawTile.TMP_MONSTER_RIGHT: return new TmpMonsterRight(player)
+    case RawTile.MONSTER_DOWN: return new MonsterDown(player)
+    case RawTile.TMP_MONSTER_DOWN: return new TmpMonsterDown(player)
+    case RawTile.MONSTER_LEFT: return new MonsterLeft(player)
     default: throwExpression('Unexpected tile')
   }
 }
 
 export function transformMap (): void {
-  map = new Array(rawMap.length)
   for (let y = 0; y < rawMap.length; y++) {
     map[y] = new Array(rawMap[y].length)
     for (let x = 0; x < rawMap[y].length; x++) {
@@ -721,10 +788,6 @@ export function transformMap (): void {
 
 export const inputs: Input[] = []
 
-let delay = 0
-export let bombs = 1
-export let gameOver = false
-
 export function update (): void {
   handleInputs()
   if (hasDelay()) return
@@ -732,7 +795,7 @@ export function update (): void {
 }
 
 export function handleInputs (): void {
-  while (inputs.length > 0 && !gameOver) {
+  while (inputs.length > 0 && !player.gameOver) {
     const input = inputs.pop() ?? throwExpression('Invalid key input')
     input.handle()
   }
@@ -741,13 +804,13 @@ export function handleInputs (): void {
 
 function handleGameOver (): void {
   if (
-    map[playerY][playerX].isGameOver()
-  ) gameOver = true
+    map[player.y][player.x].isGameOver()
+  ) player.gameOver = true
 }
 
 function hasDelay (): boolean {
-  if (--delay > 0) return true
-  delay = DELAY
+  if (--player.delay > 0) return true
+  player.delay = DELAY
   return false
 }
 
@@ -787,8 +850,8 @@ function drawMap (g: CanvasRenderingContext2D): void {
 
 function drawPlayer (g: CanvasRenderingContext2D): void {
   g.fillStyle = '#00ff00'
-  if (!gameOver) {
-    g.fillRect(playerX * TILE_SIZE, playerY * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+  if (!player.gameOver) {
+    g.fillRect(player.x * TILE_SIZE, player.y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
   }
 }
 
@@ -812,9 +875,9 @@ const UP_KEY = 'ArrowUp'
 const RIGHT_KEY = 'ArrowRight'
 const DOWN_KEY = 'ArrowDown'
 window.addEventListener('keydown', (e) => {
-  if (e.key === LEFT_KEY || e.key === 'a') inputs.push(new Left())
-  else if (e.key === UP_KEY || e.key === 'w') inputs.push(new Up())
-  else if (e.key === RIGHT_KEY || e.key === 'd') inputs.push(new Right())
-  else if (e.key === DOWN_KEY || e.key === 's') inputs.push(new Down())
-  else if (e.key === ' ') inputs.push(new Place())
+  if (e.key === LEFT_KEY || e.key === 'a') inputs.push(new Left(player))
+  else if (e.key === UP_KEY || e.key === 'w') inputs.push(new Up(player))
+  else if (e.key === RIGHT_KEY || e.key === 'd') inputs.push(new Right(player))
+  else if (e.key === DOWN_KEY || e.key === 's') inputs.push(new Down(player))
+  else if (e.key === ' ') inputs.push(new Place(player))
 })

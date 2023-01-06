@@ -6,43 +6,40 @@ import {
   Left,
   Right,
   Place,
-  playerX,
-  playerY,
-  bombs,
   map,
   inputs,
-  gameOver,
   update,
   handleInputs,
-  transformMap
+  transformMap,
+  player
 } from '../src/index'
 
 transformMap()
 
 describe('bomb man', () => {
   it('place bomb', () => {
-    inputs.push(new Place())
-    inputs.push(new Place())
+    inputs.push(new Place(player))
+    inputs.push(new Place(player))
     handleInputs()
-    equal(0, bombs)
+    equal(0, player.bombs)
   })
 
   it('move player', () => {
-    map[playerY + 0][playerX + 1].move(1, 0)
-    equal(2, playerX)
+    player.moveRight()
+    equal(2, player.x)
   })
 
   it('explode bomb', () => {
-    map[1][2].explode(2, 1, new Fire())
+    map[1][2].explode(2, 1, new Fire(player))
     ok(map[1][2].isFire())
   })
 
   it('handle inputs', () => {
-    inputs.push(new Up())
-    inputs.push(new Down())
-    inputs.push(new Left())
-    inputs.push(new Right())
-    inputs.push(new Place())
+    inputs.push(new Up(player))
+    inputs.push(new Down(player))
+    inputs.push(new Left(player))
+    inputs.push(new Right(player))
+    inputs.push(new Place(player))
     inputs.push()
     handleInputs()
     equal(0, inputs.length)
@@ -50,6 +47,6 @@ describe('bomb man', () => {
 
   it('run update', () => {
     update()
-    ok(gameOver)
+    ok(player.gameOver)
   })
 })
