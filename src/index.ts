@@ -2,7 +2,6 @@ const TILE_SIZE = 30
 const FPS = 30
 const SLEEP = 1000 / FPS
 const TPS = 2
-const DELAY = FPS / TPS
 
 enum RawTile {
   AIR,
@@ -638,6 +637,8 @@ class Player {
   bombs = 1
   gameOver = false
 
+  private readonly DELAY = FPS / TPS
+
   constructor (private readonly map: Tile[][]) { }
 
   moveUp (): void {
@@ -665,7 +666,7 @@ class Player {
 
   hasDelay (): boolean {
     if (--this.delay > 0) return true
-    this.delay = DELAY
+    this.delay = this.DELAY
     return false
   }
 
