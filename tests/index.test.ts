@@ -4,11 +4,8 @@ import {
   map,
   playerInput,
   update,
-  transformMap,
   player
 } from '../src/index'
-
-transformMap()
 
 describe('bomb man', () => {
   it('place bomb', () => {
@@ -24,8 +21,8 @@ describe('bomb man', () => {
   })
 
   it('explode bomb', () => {
-    map[1][2].explode(2, 1, new Fire(player))
-    ok(map[1][2].isFire())
+    map.getTile(2, 1).explode(2, 1, new Fire(player, map))
+    ok(map.getTile(2, 1).isFire())
   })
 
   it('handle inputs', () => {

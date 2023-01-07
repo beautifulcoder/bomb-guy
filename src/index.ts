@@ -46,7 +46,7 @@ interface Tile {
 }
 
 class Air implements Tile {
-  constructor (private readonly player: Player) { }
+  constructor (private readonly player: Player, private readonly map: Map) { }
 
   isAir (): boolean { return true }
   isUnbreakable (): boolean { return false }
@@ -76,11 +76,11 @@ class Air implements Tile {
   update (x: number, y: number): void { }
 
   placeBomb (): void {
-    map[this.player.y][this.player.x] = new Bomb(this.player)
+    this.map.setTile(this.player.x, this.player.y, new Bomb(this.player, this.map))
   }
 
   explode (x: number, y: number, fire: Tile): void {
-    map[y][x] = fire
+    this.map.setTile(x, y, fire)
   }
 }
 
@@ -114,7 +114,7 @@ class Unbreakable implements Tile {
 }
 
 class Stone implements Tile {
-  constructor (private readonly player: Player) { }
+  constructor (private readonly player: Player, private readonly map: Map) { }
 
   isAir (): boolean { return false }
   isUnbreakable (): boolean { return false }
@@ -143,13 +143,13 @@ class Stone implements Tile {
   placeBomb (): void { }
 
   explode (x: number, y: number, fire: Tile): void {
-    if (Math.random() < 0.1) map[y][x] = new ExtraBomb(this.player)
-    else map[y][x] = fire
+    if (Math.random() < 0.1) this.map.setTile(x, y, new ExtraBomb(this.player, this.map))
+    else this.map.setTile(x, y, fire)
   }
 }
 
 class Bomb implements Tile {
-  constructor (private readonly player: Player) { }
+  constructor (private readonly player: Player, private readonly map: Map) { }
 
   isAir (): boolean { return false }
   isUnbreakable (): boolean { return false }
@@ -176,18 +176,18 @@ class Bomb implements Tile {
   move (x: number, y: number): void { }
 
   update (x: number, y: number): void {
-    map[y][x] = new BombClose(this.player)
+    this.map.setTile(x, y, new BombClose(this.player, this.map))
   }
 
   placeBomb (): void { }
 
   explode (x: number, y: number, fire: Tile): void {
-    map[y][x] = fire
+    this.map.setTile(x, y, fire)
   }
 }
 
 class BombClose implements Tile {
-  constructor (private readonly player: Player) { }
+  constructor (private readonly player: Player, private readonly map: Map) { }
 
   isAir (): boolean { return false }
   isUnbreakable (): boolean { return false }
@@ -214,18 +214,18 @@ class BombClose implements Tile {
   move (x: number, y: number): void { }
 
   update (x: number, y: number): void {
-    map[y][x] = new BombReallyClose(this.player)
+    this.map.setTile(x, y, new BombReallyClose(this.player, this.map))
   }
 
   placeBomb (): void { }
 
   explode (x: number, y: number, fire: Tile): void {
-    map[y][x] = fire
+    this.map.setTile(x, y, fire)
   }
 }
 
 class BombReallyClose implements Tile {
-  constructor (private readonly player: Player) { }
+  constructor (private readonly player: Player, private readonly map: Map) { }
 
   isAir (): boolean { return false }
   isUnbreakable (): boolean { return false }
@@ -252,23 +252,31 @@ class BombReallyClose implements Tile {
   move (x: number, y: number): void { }
 
   update (x: number, y: number): void {
-    map[y - 1][x + 0].explode(x + 0, y - 1, new Fire(this.player))
-    map[y + 1][x + 0].explode(x + 0, y + 1, new TmpFire(this.player))
-    map[y + 0][x - 1].explode(x - 1, y + 0, new Fire(this.player))
-    map[y + 0][x + 1].explode(x + 1, y + 0, new TmpFire(this.player))
-    map[y][x].explode(x, y, new Fire(this.player))
+    this.explodeWithFire(x, y - 1)
+    this.explodeWithTmpFire(x, y + 1)
+    this.explodeWithFire(x - 1, y)
+    this.explodeWithTmpFire(x + 1, y)
+    this.explodeWithFire(x, y)
     this.player.bombs++
   }
 
   placeBomb (): void { }
 
   explode (x: number, y: number, fire: Tile): void {
-    map[y][x] = fire
+    this.map.setTile(x, y, fire)
+  }
+
+  private explodeWithFire (x: number, y: number): void {
+    this.map.getTile(x, y).explode(x, y, new Fire(this.player, this.map))
+  }
+
+  private explodeWithTmpFire (x: number, y: number): void {
+    this.map.getTile(x, y).explode(x, y, new TmpFire(this.player, this.map))
   }
 }
 
 class TmpFire implements Tile {
-  constructor (private readonly player: Player) { }
+  constructor (private readonly player: Player, private readonly map: Map) { }
 
   isAir (): boolean { return false }
   isUnbreakable (): boolean { return false }
@@ -294,18 +302,18 @@ class TmpFire implements Tile {
   move (x: number, y: number): void { }
 
   update (x: number, y: number): void {
-    map[y][x] = new Fire(this.player)
+    this.map.setTile(x, y, new Fire(this.player, this.map))
   }
 
   placeBomb (): void { }
 
   explode (x: number, y: number, fire: Tile): void {
-    map[y][x] = fire
+    this.map.setTile(x, y, fire)
   }
 }
 
 export class Fire implements Tile {
-  constructor (private readonly player: Player) { }
+  constructor (private readonly player: Player, private readonly map: Map) { }
 
   isAir (): boolean { return false }
   isUnbreakable (): boolean { return false }
@@ -335,20 +343,20 @@ export class Fire implements Tile {
   }
 
   update (x: number, y: number): void {
-    map[y][x] = new Air(this.player)
+    this.map.setTile(x, y, new Air(this.player, this.map))
   }
 
   placeBomb (): void {
-    map[this.player.y][this.player.x] = new Bomb(this.player)
+    this.map.setTile(this.player.x, this.player.y, new Bomb(this.player, this.map))
   }
 
   explode (x: number, y: number, fire: Tile): void {
-    map[y][x] = fire
+    this.map.setTile(x, y, fire)
   }
 }
 
 class ExtraBomb implements Tile {
-  constructor (private readonly player: Player) { }
+  constructor (private readonly player: Player, private readonly map: Map) { }
 
   isAir (): boolean { return false }
   isUnbreakable (): boolean { return false }
@@ -376,23 +384,23 @@ class ExtraBomb implements Tile {
     this.player.y += y
     this.player.x += x
     this.player.bombs++
-    map[this.player.y][this.player.x] = new Air(this.player)
+    this.map.setTile(this.player.x, this.player.y, new Air(this.player, this.map))
   }
 
   update (x: number, y: number): void { }
 
   placeBomb (): void {
-    map[player.y][player.x] = new Bomb(this.player)
+    this.map.setTile(player.x, player.y, new Bomb(this.player, this.map))
   }
 
   explode (x: number, y: number, fire: Tile): void {
     this.player.bombs++
-    map[y][x] = fire
+    this.map.setTile(x, y, fire)
   }
 }
 
 class MonsterUp implements Tile {
-  constructor (private readonly player: Player) { }
+  constructor (private readonly player: Player, private readonly map: Map) { }
 
   isAir (): boolean { return false }
   isUnbreakable (): boolean { return false }
@@ -419,21 +427,21 @@ class MonsterUp implements Tile {
   move (x: number, y: number): void { }
 
   update (x: number, y: number): void {
-    if (map[y - 1][x].isAir()) {
-      map[y][x] = new Air(this.player)
-      map[y - 1][x] = new MonsterUp(this.player)
-    } else map[y][x] = new MonsterRight(this.player)
+    if (this.map.getTile(x, y - 1).isAir()) {
+      this.map.setTile(x, y, new Air(this.player, this.map))
+      this.map.setTile(x, y - 1, new MonsterUp(this.player, this.map))
+    } else this.map.setTile(x, y, new MonsterRight(this.player, this.map))
   }
 
   placeBomb (): void { }
 
   explode (x: number, y: number, fire: Tile): void {
-    map[y][x] = fire
+    this.map.setTile(x, y, fire)
   }
 }
 
 class MonsterRight implements Tile {
-  constructor (private readonly player: Player) { }
+  constructor (private readonly player: Player, private readonly map: Map) { }
 
   isAir (): boolean { return false }
   isUnbreakable (): boolean { return false }
@@ -460,21 +468,21 @@ class MonsterRight implements Tile {
   move (x: number, y: number): void { }
 
   update (x: number, y: number): void {
-    if (map[y][x + 1].isAir()) {
-      map[y][x] = new Air(this.player)
-      map[y][x + 1] = new TmpMonsterRight(this.player)
-    } else map[y][x] = new MonsterDown(this.player)
+    if (this.map.getTile(x + 1, y).isAir()) {
+      this.map.setTile(x, y, new Air(this.player, this.map))
+      this.map.setTile(x + 1, y, new TmpMonsterRight(this.player, this.map))
+    } else this.map.setTile(x, y, new MonsterDown(this.player, this.map))
   }
 
   placeBomb (): void { }
 
   explode (x: number, y: number, fire: Tile): void {
-    map[y][x] = fire
+    this.map.setTile(x, y, fire)
   }
 }
 
 class TmpMonsterRight implements Tile {
-  constructor (private readonly player: Player) { }
+  constructor (private readonly player: Player, private readonly map: Map) { }
 
   isAir (): boolean { return false }
   isUnbreakable (): boolean { return false }
@@ -500,18 +508,18 @@ class TmpMonsterRight implements Tile {
   move (x: number, y: number): void { }
 
   update (x: number, y: number): void {
-    map[y][x] = new MonsterRight(this.player)
+    this.map.setTile(x, y, new MonsterRight(this.player, this.map))
   }
 
   placeBomb (): void { }
 
   explode (x: number, y: number, fire: Tile): void {
-    map[y][x] = fire
+    this.map.setTile(x, y, fire)
   }
 }
 
 class MonsterDown implements Tile {
-  constructor (private readonly player: Player) { }
+  constructor (private readonly player: Player, private readonly map: Map) { }
 
   isAir (): boolean { return false }
   isUnbreakable (): boolean { return false }
@@ -538,21 +546,21 @@ class MonsterDown implements Tile {
   move (x: number, y: number): void { }
 
   update (x: number, y: number): void {
-    if (map[y + 1][x].isAir()) {
-      map[y][x] = new Air(this.player)
-      map[y + 1][x] = new TmpMonsterDown(this.player)
-    } else map[y][x] = new MonsterLeft(this.player)
+    if (this.map.getTile(x, y + 1).isAir()) {
+      this.map.setTile(x, y, new Air(this.player, this.map))
+      this.map.setTile(x, y + 1, new TmpMonsterDown(this.player, this.map))
+    } else this.map.setTile(x, y, new MonsterLeft(this.player, this.map))
   }
 
   placeBomb (): void { }
 
   explode (x: number, y: number, fire: Tile): void {
-    map[y][x] = fire
+    this.map.setTile(x, y, fire)
   }
 }
 
 class TmpMonsterDown implements Tile {
-  constructor (private readonly player: Player) { }
+  constructor (private readonly player: Player, private readonly map: Map) { }
 
   isAir (): boolean { return false }
   isUnbreakable (): boolean { return false }
@@ -578,18 +586,18 @@ class TmpMonsterDown implements Tile {
   move (x: number, y: number): void { }
 
   update (x: number, y: number): void {
-    map[y][x] = new MonsterDown(this.player)
+    this.map.setTile(x, y, new MonsterDown(this.player, this.map))
   }
 
   placeBomb (): void { }
 
   explode (x: number, y: number, fire: Tile): void {
-    map[y][x] = fire
+    this.map.setTile(x, y, fire)
   }
 }
 
 class MonsterLeft implements Tile {
-  constructor (private readonly player: Player) { }
+  constructor (private readonly player: Player, private readonly map: Map) { }
 
   isAir (): boolean { return false }
   isUnbreakable (): boolean { return false }
@@ -616,16 +624,78 @@ class MonsterLeft implements Tile {
   move (x: number, y: number): void { }
 
   update (x: number, y: number): void {
-    if (map[y][x - 1].isAir()) {
-      map[y][x] = new Air(this.player)
-      map[y][x - 1] = new MonsterLeft(this.player)
-    } else map[y][x] = new MonsterUp(this.player)
+    if (this.map.getTile(x - 1, y).isAir()) {
+      this.map.setTile(x, y, new Air(this.player, this.map))
+      this.map.setTile(x - 1, y, new MonsterLeft(this.player, this.map))
+    } else this.map.setTile(x, y, new MonsterUp(this.player, this.map))
   }
 
   placeBomb (): void { }
 
   explode (x: number, y: number, fire: Tile): void {
-    map[y][x] = fire
+    this.map.setTile(x, y, fire)
+  }
+}
+
+class Map {
+  private readonly map: Tile[][]
+
+  constructor (private readonly rawMap: RawTile[][]) {
+    this.map = new Array(rawMap.length)
+  }
+
+  initialize (player: Player): void {
+    for (let y = 0; y < rawMap.length; y++) {
+      this.map[y] = new Array(rawMap[y].length)
+      for (let x = 0; x < rawMap[y].length; x++) {
+        this.map[y][x] = this.transformTile(player, rawMap[y][x])
+      }
+    }
+  }
+
+  getTile (x: number, y: number): Tile {
+    return this.map[y][x]
+  }
+
+  setTile (x: number, y: number, tile: Tile): void {
+    this.map[y][x] = tile
+  }
+
+  update (): void {
+    for (let y = 1; y < this.map.length; y++) {
+      for (let x = 1; x < this.map[y].length; x++) {
+        this.map[y][x].update(x, y)
+      }
+    }
+  }
+
+  draw (g: CanvasRenderingContext2D): void {
+    for (let y = 0; y < this.map.length; y++) {
+      for (let x = 0; x < this.map[y].length; x++) {
+        this.map[y][x].draw(g, x, y)
+      }
+    }
+  }
+
+  private transformTile (player: Player, tile: RawTile): Tile {
+    switch (tile) {
+      case RawTile.AIR: return new Air(player, this)
+      case RawTile.UNBREAKABLE: return new Unbreakable()
+      case RawTile.STONE: return new Stone(player, this)
+      case RawTile.BOMB: return new Bomb(player, this)
+      case RawTile.BOMB_CLOSE: return new BombClose(player, this)
+      case RawTile.BOMB_REALLY_CLOSE: return new BombReallyClose(player, this)
+      case RawTile.TMP_FIRE: return new TmpFire(player, this)
+      case RawTile.FIRE: return new Fire(player, this)
+      case RawTile.EXTRA_BOMB: return new ExtraBomb(player, this)
+      case RawTile.MONSTER_UP: return new MonsterUp(player, this)
+      case RawTile.MONSTER_RIGHT: return new MonsterRight(player, this)
+      case RawTile.TMP_MONSTER_RIGHT: return new TmpMonsterRight(player, this)
+      case RawTile.MONSTER_DOWN: return new MonsterDown(player, this)
+      case RawTile.TMP_MONSTER_DOWN: return new TmpMonsterDown(player, this)
+      case RawTile.MONSTER_LEFT: return new MonsterLeft(player, this)
+      default: throwExpression('Unexpected tile')
+    }
   }
 }
 
@@ -639,27 +709,29 @@ class Player {
 
   private readonly DELAY = FPS / TPS
 
-  constructor (private readonly map: Tile[][]) { }
+  constructor (private readonly map: Map) {
+    this.map.initialize(this)
+  }
 
   moveUp (): void {
-    this.map[this.y + -1][this.x + 0].move(0, -1)
+    this.map.getTile(this.x, this.y - 1).move(0, -1)
   }
 
   moveDown (): void {
-    this.map[this.y + 1][this.x + 0].move(0, 1)
+    this.map.getTile(this.x, this.y + 1).move(0, 1)
   }
 
   moveLeft (): void {
-    this.map[this.y + 0][this.x + -1].move(-1, 0)
+    this.map.getTile(this.x - 1, this.y).move(-1, 0)
   }
 
   moveRight (): void {
-    this.map[this.y + 0][this.x + 1].move(1, 0)
+    this.map.getTile(this.x + 1, this.y).move(1, 0)
   }
 
   placeBomb (): void {
     if (this.bombs > 0) {
-      this.map[this.y][this.x].placeBomb()
+      this.map.getTile(this.x, this.y).placeBomb()
       this.bombs--
     }
   }
@@ -671,13 +743,11 @@ class Player {
   }
 
   handleGameOver (): void {
-    if (
-      map[this.y][this.x].isGameOver()
-    ) this.gameOver = true
+    if (this.map.getTile(this.x, this.y).isGameOver()) this.gameOver = true
   }
 
   draw (g: CanvasRenderingContext2D): void {
-    if (!player.gameOver) {
+    if (!this.gameOver) {
       g.fillStyle = '#00ff00'
       g.fillRect(player.x * TILE_SIZE, player.y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
     }
@@ -791,23 +861,23 @@ class PlayerInput {
   }
 
   private keyLeft (key: string): void {
-    if (key === this.LEFT_KEY || key === 'a') this.inputs.push(new Left(player))
+    if (key === this.LEFT_KEY || key === 'a') this.inputs.push(new Left(this.player))
   }
 
   private keyUp (key: string): void {
-    if (key === this.UP_KEY || key === 'w') this.inputs.push(new Up(player))
+    if (key === this.UP_KEY || key === 'w') this.inputs.push(new Up(this.player))
   }
 
   private keyRight (key: string): void {
-    if (key === this.RIGHT_KEY || key === 'd') this.inputs.push(new Right(player))
+    if (key === this.RIGHT_KEY || key === 'd') this.inputs.push(new Right(this.player))
   }
 
   private keyDown (key: string): void {
-    if (key === this.DOWN_KEY || key === 's') this.inputs.push(new Down(player))
+    if (key === this.DOWN_KEY || key === 's') this.inputs.push(new Down(this.player))
   }
 
   private keyPlace (key: string): void {
-    if (key === ' ') this.inputs.push(new Place(player))
+    if (key === ' ') this.inputs.push(new Place(this.player))
   }
 }
 
@@ -823,53 +893,15 @@ const rawMap: RawTile[][] = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1]
 ]
 
-export const map: Tile[][] = new Array(rawMap.length)
+export const map = new Map(rawMap)
 export const player = new Player(map)
 export const playerInput = new PlayerInput(player)
-
-function transformTile (tile: RawTile): Tile {
-  switch (tile) {
-    case RawTile.AIR: return new Air(player)
-    case RawTile.UNBREAKABLE: return new Unbreakable()
-    case RawTile.STONE: return new Stone(player)
-    case RawTile.BOMB: return new Bomb(player)
-    case RawTile.BOMB_CLOSE: return new BombClose(player)
-    case RawTile.BOMB_REALLY_CLOSE: return new BombReallyClose(player)
-    case RawTile.TMP_FIRE: return new TmpFire(player)
-    case RawTile.FIRE: return new Fire(player)
-    case RawTile.EXTRA_BOMB: return new ExtraBomb(player)
-    case RawTile.MONSTER_UP: return new MonsterUp(player)
-    case RawTile.MONSTER_RIGHT: return new MonsterRight(player)
-    case RawTile.TMP_MONSTER_RIGHT: return new TmpMonsterRight(player)
-    case RawTile.MONSTER_DOWN: return new MonsterDown(player)
-    case RawTile.TMP_MONSTER_DOWN: return new TmpMonsterDown(player)
-    case RawTile.MONSTER_LEFT: return new MonsterLeft(player)
-    default: throwExpression('Unexpected tile')
-  }
-}
-
-export function transformMap (): void {
-  for (let y = 0; y < rawMap.length; y++) {
-    map[y] = new Array(rawMap[y].length)
-    for (let x = 0; x < rawMap[y].length; x++) {
-      map[y][x] = transformTile(rawMap[y][x])
-    }
-  }
-}
 
 export function update (): void {
   playerInput.handle()
   player.handleGameOver()
   if (player.hasDelay()) return
-  updateMap()
-}
-
-function updateMap (): void {
-  for (let y = 1; y < map.length; y++) {
-    for (let x = 1; x < map[y].length; x++) {
-      map[y][x].update(x, y)
-    }
-  }
+  map.update()
 }
 
 function throwExpression (message: string): never {
@@ -886,16 +918,8 @@ function createGraphics (): CanvasRenderingContext2D {
 
 function draw (): void {
   const g = createGraphics()
-  drawMap(g)
+  map.draw(g)
   player.draw(g)
-}
-
-function drawMap (g: CanvasRenderingContext2D): void {
-  for (let y = 0; y < map.length; y++) {
-    for (let x = 0; x < map[y].length; x++) {
-      map[y][x].draw(g, x, y)
-    }
-  }
 }
 
 function gameLoop (): void {
@@ -909,7 +933,6 @@ function gameLoop (): void {
 }
 
 window.onload = () => {
-  transformMap()
   gameLoop()
 }
 
