@@ -1,15 +1,9 @@
 import { equal, ok } from 'assert'
 import {
   Fire,
-  Up,
-  Down,
-  Left,
-  Right,
-  Place,
   map,
-  inputs,
+  playerInput,
   update,
-  handleInputs,
   transformMap,
   player
 } from '../src/index'
@@ -18,9 +12,9 @@ transformMap()
 
 describe('bomb man', () => {
   it('place bomb', () => {
-    inputs.push(new Place(player))
-    inputs.push(new Place(player))
-    handleInputs()
+    playerInput.keyPress(' ')
+    playerInput.keyPress(' ')
+    playerInput.handle()
     equal(0, player.bombs)
   })
 
@@ -35,14 +29,13 @@ describe('bomb man', () => {
   })
 
   it('handle inputs', () => {
-    inputs.push(new Up(player))
-    inputs.push(new Down(player))
-    inputs.push(new Left(player))
-    inputs.push(new Right(player))
-    inputs.push(new Place(player))
-    inputs.push()
-    handleInputs()
-    equal(0, inputs.length)
+    playerInput.keyPress('ArrowUp')
+    playerInput.keyPress('ArrowDown')
+    playerInput.keyPress('ArrowLeft')
+    playerInput.keyPress('ArrowRight')
+    playerInput.keyPress(' ')
+    playerInput.handle()
+    equal(0, playerInput.count())
   })
 
   it('run update', () => {

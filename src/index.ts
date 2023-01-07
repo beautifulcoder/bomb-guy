@@ -4,7 +4,7 @@ const SLEEP = 1000 / FPS
 const TPS = 2
 const DELAY = FPS / TPS
 
-export enum RawTile {
+enum RawTile {
   AIR,
   UNBREAKABLE,
   STONE,
@@ -630,7 +630,7 @@ class MonsterLeft implements Tile {
   }
 }
 
-export class Player {
+class Player {
   x = 1
   y = 1
 
@@ -692,7 +692,7 @@ interface Input {
   handle: () => void
 }
 
-export class Up implements Input {
+class Up implements Input {
   constructor (private readonly player: Player) { }
 
   isUp (): boolean { return true }
@@ -706,7 +706,7 @@ export class Up implements Input {
   }
 }
 
-export class Down implements Input {
+class Down implements Input {
   constructor (private readonly player: Player) { }
 
   isUp (): boolean { return false }
@@ -720,7 +720,7 @@ export class Down implements Input {
   }
 }
 
-export class Left implements Input {
+class Left implements Input {
   constructor (private readonly player: Player) { }
 
   isUp (): boolean { return false }
@@ -734,7 +734,7 @@ export class Left implements Input {
   }
 }
 
-export class Right implements Input {
+class Right implements Input {
   constructor (private readonly player: Player) { }
 
   isUp (): boolean { return false }
@@ -747,7 +747,7 @@ export class Right implements Input {
   }
 }
 
-export class Place implements Input {
+class Place implements Input {
   constructor (private readonly player: Player) { }
 
   isUp (): boolean { return false }
@@ -760,7 +760,57 @@ export class Place implements Input {
   }
 }
 
-export const rawMap: RawTile[][] = [
+class PlayerInput {
+  private readonly inputs: Input[] = []
+
+  private readonly LEFT_KEY = 'ArrowLeft'
+  private readonly UP_KEY = 'ArrowUp'
+  private readonly RIGHT_KEY = 'ArrowRight'
+  private readonly DOWN_KEY = 'ArrowDown'
+
+  constructor (private readonly player: Player) { }
+
+  handle (): void {
+    while (this.inputs.length > 0 && !this.player.gameOver) {
+      const input = this.inputs.pop() ?? throwExpression('Invalid key input')
+      input.handle()
+    }
+  }
+
+  keyPress (key: string): void {
+    this.keyLeft(key)
+    this.keyUp(key)
+    this.keyRight(key)
+    this.keyDown(key)
+    this.keyPlace(key)
+  }
+
+  count (): number {
+    return this.inputs.length
+  }
+
+  private keyLeft (key: string): void {
+    if (key === this.LEFT_KEY || key === 'a') this.inputs.push(new Left(player))
+  }
+
+  private keyUp (key: string): void {
+    if (key === this.UP_KEY || key === 'w') this.inputs.push(new Up(player))
+  }
+
+  private keyRight (key: string): void {
+    if (key === this.RIGHT_KEY || key === 'd') this.inputs.push(new Right(player))
+  }
+
+  private keyDown (key: string): void {
+    if (key === this.DOWN_KEY || key === 's') this.inputs.push(new Down(player))
+  }
+
+  private keyPlace (key: string): void {
+    if (key === ' ') this.inputs.push(new Place(player))
+  }
+}
+
+const rawMap: RawTile[][] = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1],
   [1, 0, 0, 2, 2, 2, 2, 2, 1],
   [1, 0, 1, 2, 1, 2, 1, 2, 1],
@@ -774,6 +824,7 @@ export const rawMap: RawTile[][] = [
 
 export const map: Tile[][] = new Array(rawMap.length)
 export const player = new Player(map)
+export const playerInput = new PlayerInput(player)
 
 function transformTile (tile: RawTile): Tile {
   switch (tile) {
@@ -805,20 +856,11 @@ export function transformMap (): void {
   }
 }
 
-export const inputs: Input[] = []
-
 export function update (): void {
-  handleInputs()
+  playerInput.handle()
   player.handleGameOver()
   if (player.hasDelay()) return
   updateMap()
-}
-
-export function handleInputs (): void {
-  while (inputs.length > 0 && !player.gameOver) {
-    const input = inputs.pop() ?? throwExpression('Invalid key input')
-    input.handle()
-  }
 }
 
 function updateMap (): void {
@@ -870,14 +912,6 @@ window.onload = () => {
   gameLoop()
 }
 
-const LEFT_KEY = 'ArrowLeft'
-const UP_KEY = 'ArrowUp'
-const RIGHT_KEY = 'ArrowRight'
-const DOWN_KEY = 'ArrowDown'
 window.addEventListener('keydown', (e) => {
-  if (e.key === LEFT_KEY || e.key === 'a') inputs.push(new Left(player))
-  else if (e.key === UP_KEY || e.key === 'w') inputs.push(new Up(player))
-  else if (e.key === RIGHT_KEY || e.key === 'd') inputs.push(new Right(player))
-  else if (e.key === DOWN_KEY || e.key === 's') inputs.push(new Down(player))
-  else if (e.key === ' ') inputs.push(new Place(player))
+  playerInput.keyPress(e.key)
 })
