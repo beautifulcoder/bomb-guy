@@ -1,11 +1,13 @@
 import { equal, ok } from 'assert'
 import {
-  Fire,
   map,
   playerInput,
   update,
   player
 } from '../src/index'
+import {
+  Fire
+} from '../src/tile'
 
 describe('bomb man', () => {
   it('place bomb', () => {
@@ -16,7 +18,8 @@ describe('bomb man', () => {
   })
 
   it('move player', () => {
-    player.moveRight()
+    playerInput.keyPress('ArrowRight')
+    playerInput.handle()
     equal(2, player.x)
   })
 
