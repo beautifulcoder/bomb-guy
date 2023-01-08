@@ -24,21 +24,6 @@ export enum RawTile {
 }
 
 interface Tile {
-  isAir: () => boolean
-  isUnbreakable: () => boolean
-  isStone: () => boolean
-  isBomb: () => boolean
-  isBombClose: () => boolean
-  isBombReallyClose: () => boolean
-  isTmpFire: () => boolean
-  isFire: () => boolean
-  isExtraBomb: () => boolean
-  isMonsterUp: () => boolean
-  isMonsterRight: () => boolean
-  isTmpMonsterRight: () => boolean
-  isMonsterDown: () => boolean
-  isTmpMonsterDown: () => boolean
-  isMonsterLeft: () => boolean
   isGameOver: () => boolean
   draw: (g: CanvasRenderingContext2D, x: number, y: number) => void
   move: (x: number, y: number) => void
@@ -50,21 +35,6 @@ interface Tile {
 class Air implements Tile {
   constructor (private readonly player: Player, private readonly map: Map) { }
 
-  isAir (): boolean { return true }
-  isUnbreakable (): boolean { return false }
-  isStone (): boolean { return false }
-  isBomb (): boolean { return false }
-  isBombClose (): boolean { return false }
-  isBombReallyClose (): boolean { return false }
-  isTmpFire (): boolean { return false }
-  isFire (): boolean { return false }
-  isExtraBomb (): boolean { return false }
-  isMonsterUp (): boolean { return false }
-  isMonsterRight (): boolean { return false }
-  isTmpMonsterRight (): boolean { return false }
-  isMonsterDown (): boolean { return false }
-  isTmpMonsterDown (): boolean { return false }
-  isMonsterLeft (): boolean { return false }
   isGameOver (): boolean { return false }
 
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
@@ -87,21 +57,6 @@ class Air implements Tile {
 }
 
 class Unbreakable implements Tile {
-  isAir (): boolean { return false }
-  isUnbreakable (): boolean { return true }
-  isStone (): boolean { return false }
-  isBomb (): boolean { return false }
-  isBombClose (): boolean { return false }
-  isBombReallyClose (): boolean { return false }
-  isTmpFire (): boolean { return false }
-  isFire (): boolean { return false }
-  isExtraBomb (): boolean { return false }
-  isMonsterUp (): boolean { return false }
-  isMonsterRight (): boolean { return false }
-  isTmpMonsterRight (): boolean { return false }
-  isMonsterDown (): boolean { return false }
-  isTmpMonsterDown (): boolean { return false }
-  isMonsterLeft (): boolean { return false }
   isGameOver (): boolean { return false }
 
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
@@ -118,21 +73,6 @@ class Unbreakable implements Tile {
 class Stone implements Tile {
   constructor (private readonly player: Player, private readonly map: Map) { }
 
-  isAir (): boolean { return false }
-  isUnbreakable (): boolean { return false }
-  isStone (): boolean { return true }
-  isBomb (): boolean { return false }
-  isBombClose (): boolean { return false }
-  isBombReallyClose (): boolean { return false }
-  isTmpFire (): boolean { return false }
-  isFire (): boolean { return false }
-  isExtraBomb (): boolean { return false }
-  isMonsterUp (): boolean { return false }
-  isMonsterRight (): boolean { return false }
-  isTmpMonsterRight (): boolean { return false }
-  isMonsterDown (): boolean { return false }
-  isTmpMonsterDown (): boolean { return false }
-  isMonsterLeft (): boolean { return false }
   isGameOver (): boolean { return false }
 
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
@@ -153,21 +93,6 @@ class Stone implements Tile {
 class Bomb implements Tile {
   constructor (private readonly player: Player, private readonly map: Map) { }
 
-  isAir (): boolean { return false }
-  isUnbreakable (): boolean { return false }
-  isStone (): boolean { return false }
-  isBomb (): boolean { return true }
-  isBombClose (): boolean { return false }
-  isBombReallyClose (): boolean { return false }
-  isTmpFire (): boolean { return false }
-  isFire (): boolean { return false }
-  isExtraBomb (): boolean { return true }
-  isMonsterUp (): boolean { return false }
-  isMonsterRight (): boolean { return false }
-  isTmpMonsterRight (): boolean { return false }
-  isMonsterDown (): boolean { return false }
-  isTmpMonsterDown (): boolean { return false }
-  isMonsterLeft (): boolean { return false }
   isGameOver (): boolean { return false }
 
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
@@ -191,21 +116,6 @@ class Bomb implements Tile {
 class BombClose implements Tile {
   constructor (private readonly player: Player, private readonly map: Map) { }
 
-  isAir (): boolean { return false }
-  isUnbreakable (): boolean { return false }
-  isStone (): boolean { return false }
-  isBomb (): boolean { return false }
-  isBombClose (): boolean { return true }
-  isBombReallyClose (): boolean { return false }
-  isTmpFire (): boolean { return false }
-  isFire (): boolean { return false }
-  isExtraBomb (): boolean { return true }
-  isMonsterUp (): boolean { return false }
-  isMonsterRight (): boolean { return false }
-  isTmpMonsterRight (): boolean { return false }
-  isMonsterDown (): boolean { return false }
-  isTmpMonsterDown (): boolean { return false }
-  isMonsterLeft (): boolean { return false }
   isGameOver (): boolean { return false }
 
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
@@ -229,21 +139,6 @@ class BombClose implements Tile {
 class BombReallyClose implements Tile {
   constructor (private readonly player: Player, private readonly map: Map) { }
 
-  isAir (): boolean { return false }
-  isUnbreakable (): boolean { return false }
-  isStone (): boolean { return false }
-  isBomb (): boolean { return false }
-  isBombClose (): boolean { return false }
-  isBombReallyClose (): boolean { return true }
-  isTmpFire (): boolean { return false }
-  isFire (): boolean { return false }
-  isExtraBomb (): boolean { return true }
-  isMonsterUp (): boolean { return false }
-  isMonsterRight (): boolean { return false }
-  isTmpMonsterRight (): boolean { return false }
-  isMonsterDown (): boolean { return false }
-  isTmpMonsterDown (): boolean { return false }
-  isMonsterLeft (): boolean { return false }
   isGameOver (): boolean { return false }
 
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
@@ -272,21 +167,6 @@ class BombReallyClose implements Tile {
 class TmpFire implements Tile {
   constructor (private readonly player: Player, private readonly map: Map) { }
 
-  isAir (): boolean { return false }
-  isUnbreakable (): boolean { return false }
-  isStone (): boolean { return false }
-  isBomb (): boolean { return false }
-  isBombClose (): boolean { return false }
-  isBombReallyClose (): boolean { return false }
-  isTmpFire (): boolean { return true }
-  isFire (): boolean { return false }
-  isExtraBomb (): boolean { return false }
-  isMonsterUp (): boolean { return false }
-  isMonsterRight (): boolean { return false }
-  isTmpMonsterRight (): boolean { return false }
-  isMonsterDown (): boolean { return false }
-  isTmpMonsterDown (): boolean { return false }
-  isMonsterLeft (): boolean { return false }
   isGameOver (): boolean { return false }
 
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
@@ -309,21 +189,6 @@ class TmpFire implements Tile {
 class Fire implements Tile {
   constructor (private readonly player: Player, private readonly map: Map) { }
 
-  isAir (): boolean { return false }
-  isUnbreakable (): boolean { return false }
-  isStone (): boolean { return false }
-  isBomb (): boolean { return false }
-  isBombClose (): boolean { return false }
-  isBombReallyClose (): boolean { return false }
-  isTmpFire (): boolean { return false }
-  isFire (): boolean { return true }
-  isExtraBomb (): boolean { return false }
-  isMonsterUp (): boolean { return false }
-  isMonsterRight (): boolean { return false }
-  isTmpMonsterRight (): boolean { return false }
-  isMonsterDown (): boolean { return false }
-  isTmpMonsterDown (): boolean { return false }
-  isMonsterLeft (): boolean { return false }
   isGameOver (): boolean { return true }
 
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
@@ -352,21 +217,6 @@ class Fire implements Tile {
 class ExtraBomb implements Tile {
   constructor (private readonly player: Player, private readonly map: Map) { }
 
-  isAir (): boolean { return false }
-  isUnbreakable (): boolean { return false }
-  isStone (): boolean { return false }
-  isBomb (): boolean { return false }
-  isBombClose (): boolean { return false }
-  isBombReallyClose (): boolean { return false }
-  isTmpFire (): boolean { return false }
-  isFire (): boolean { return false }
-  isExtraBomb (): boolean { return true }
-  isMonsterUp (): boolean { return false }
-  isMonsterRight (): boolean { return false }
-  isTmpMonsterRight (): boolean { return false }
-  isMonsterDown (): boolean { return false }
-  isTmpMonsterDown (): boolean { return false }
-  isMonsterLeft (): boolean { return false }
   isGameOver (): boolean { return false }
 
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
@@ -396,21 +246,6 @@ class ExtraBomb implements Tile {
 class MonsterUp implements Tile {
   constructor (private readonly player: Player, private readonly map: Map) { }
 
-  isAir (): boolean { return false }
-  isUnbreakable (): boolean { return false }
-  isStone (): boolean { return false }
-  isBomb (): boolean { return false }
-  isBombClose (): boolean { return false }
-  isBombReallyClose (): boolean { return false }
-  isTmpFire (): boolean { return false }
-  isFire (): boolean { return false }
-  isExtraBomb (): boolean { return false }
-  isMonsterUp (): boolean { return true }
-  isMonsterRight (): boolean { return false }
-  isTmpMonsterRight (): boolean { return false }
-  isMonsterDown (): boolean { return false }
-  isTmpMonsterDown (): boolean { return false }
-  isMonsterLeft (): boolean { return false }
   isGameOver (): boolean { return true }
 
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
@@ -449,21 +284,6 @@ class MonsterUp implements Tile {
 class MonsterRight implements Tile {
   constructor (private readonly player: Player, private readonly map: Map) { }
 
-  isAir (): boolean { return false }
-  isUnbreakable (): boolean { return false }
-  isStone (): boolean { return false }
-  isBomb (): boolean { return false }
-  isBombClose (): boolean { return false }
-  isBombReallyClose (): boolean { return false }
-  isTmpFire (): boolean { return false }
-  isFire (): boolean { return false }
-  isExtraBomb (): boolean { return false }
-  isMonsterUp (): boolean { return false }
-  isMonsterRight (): boolean { return true }
-  isTmpMonsterRight (): boolean { return false }
-  isMonsterDown (): boolean { return false }
-  isTmpMonsterDown (): boolean { return false }
-  isMonsterLeft (): boolean { return false }
   isGameOver (): boolean { return true }
 
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
@@ -502,21 +322,6 @@ class MonsterRight implements Tile {
 class TmpMonsterRight implements Tile {
   constructor (private readonly player: Player, private readonly map: Map) { }
 
-  isAir (): boolean { return false }
-  isUnbreakable (): boolean { return false }
-  isStone (): boolean { return false }
-  isBomb (): boolean { return false }
-  isBombClose (): boolean { return false }
-  isBombReallyClose (): boolean { return false }
-  isTmpFire (): boolean { return false }
-  isFire (): boolean { return false }
-  isExtraBomb (): boolean { return false }
-  isMonsterUp (): boolean { return false }
-  isMonsterRight (): boolean { return false }
-  isTmpMonsterRight (): boolean { return true }
-  isMonsterDown (): boolean { return false }
-  isTmpMonsterDown (): boolean { return false }
-  isMonsterLeft (): boolean { return false }
   isGameOver (): boolean { return false }
 
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
@@ -539,21 +344,6 @@ class TmpMonsterRight implements Tile {
 class MonsterDown implements Tile {
   constructor (private readonly player: Player, private readonly map: Map) { }
 
-  isAir (): boolean { return false }
-  isUnbreakable (): boolean { return false }
-  isStone (): boolean { return false }
-  isBomb (): boolean { return false }
-  isBombClose (): boolean { return false }
-  isBombReallyClose (): boolean { return false }
-  isTmpFire (): boolean { return false }
-  isFire (): boolean { return false }
-  isExtraBomb (): boolean { return false }
-  isMonsterUp (): boolean { return false }
-  isMonsterRight (): boolean { return false }
-  isTmpMonsterRight (): boolean { return false }
-  isMonsterDown (): boolean { return true }
-  isTmpMonsterDown (): boolean { return false }
-  isMonsterLeft (): boolean { return false }
   isGameOver (): boolean { return true }
 
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
@@ -592,21 +382,6 @@ class MonsterDown implements Tile {
 class TmpMonsterDown implements Tile {
   constructor (private readonly player: Player, private readonly map: Map) { }
 
-  isAir (): boolean { return false }
-  isUnbreakable (): boolean { return false }
-  isStone (): boolean { return false }
-  isBomb (): boolean { return false }
-  isBombClose (): boolean { return false }
-  isBombReallyClose (): boolean { return false }
-  isTmpFire (): boolean { return false }
-  isFire (): boolean { return false }
-  isExtraBomb (): boolean { return false }
-  isMonsterUp (): boolean { return false }
-  isMonsterRight (): boolean { return false }
-  isTmpMonsterRight (): boolean { return false }
-  isMonsterDown (): boolean { return false }
-  isTmpMonsterDown (): boolean { return true }
-  isMonsterLeft (): boolean { return false }
   isGameOver (): boolean { return false }
 
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {
@@ -629,21 +404,6 @@ class TmpMonsterDown implements Tile {
 class MonsterLeft implements Tile {
   constructor (private readonly player: Player, private readonly map: Map) { }
 
-  isAir (): boolean { return false }
-  isUnbreakable (): boolean { return false }
-  isStone (): boolean { return false }
-  isBomb (): boolean { return false }
-  isBombClose (): boolean { return false }
-  isBombReallyClose (): boolean { return false }
-  isTmpFire (): boolean { return false }
-  isFire (): boolean { return false }
-  isExtraBomb (): boolean { return false }
-  isMonsterUp (): boolean { return false }
-  isMonsterRight (): boolean { return false }
-  isTmpMonsterRight (): boolean { return false }
-  isMonsterDown (): boolean { return false }
-  isTmpMonsterDown (): boolean { return false }
-  isMonsterLeft (): boolean { return true }
   isGameOver (): boolean { return true }
 
   draw (g: CanvasRenderingContext2D, x: number, y: number): void {

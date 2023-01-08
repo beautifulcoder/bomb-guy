@@ -2,22 +2,11 @@ import { throwExpression } from './exception.js'
 import { Player } from './tile.js'
 
 interface Input {
-  isUp: () => boolean
-  isDown: () => boolean
-  isLeft: () => boolean
-  isRight: () => boolean
-  isPlace: () => boolean
   handle: () => void
 }
 
 class Up implements Input {
   constructor (private readonly player: Player) { }
-
-  isUp (): boolean { return true }
-  isDown (): boolean { return false }
-  isLeft (): boolean { return false }
-  isRight (): boolean { return false }
-  isPlace (): boolean { return false }
 
   handle (): void {
     this.player.moveUp()
@@ -27,12 +16,6 @@ class Up implements Input {
 class Down implements Input {
   constructor (private readonly player: Player) { }
 
-  isUp (): boolean { return false }
-  isDown (): boolean { return true }
-  isLeft (): boolean { return false }
-  isRight (): boolean { return false }
-  isPlace (): boolean { return false }
-
   handle (): void {
     this.player.moveDown()
   }
@@ -40,12 +23,6 @@ class Down implements Input {
 
 class Left implements Input {
   constructor (private readonly player: Player) { }
-
-  isUp (): boolean { return false }
-  isDown (): boolean { return false }
-  isLeft (): boolean { return true }
-  isRight (): boolean { return false }
-  isPlace (): boolean { return false }
 
   handle (): void {
     this.player.moveLeft()
@@ -55,11 +32,6 @@ class Left implements Input {
 class Right implements Input {
   constructor (private readonly player: Player) { }
 
-  isUp (): boolean { return false }
-  isDown (): boolean { return false }
-  isLeft (): boolean { return false }
-  isRight (): boolean { return true }
-  isPlace (): boolean { return false }
   handle (): void {
     this.player.moveRight()
   }
@@ -68,11 +40,6 @@ class Right implements Input {
 class Place implements Input {
   constructor (private readonly player: Player) { }
 
-  isUp (): boolean { return false }
-  isDown (): boolean { return false }
-  isLeft (): boolean { return false }
-  isRight (): boolean { return false }
-  isPlace (): boolean { return true }
   handle (): void {
     this.player.placeBomb()
   }
