@@ -1,122 +1,162 @@
 import { equal, ok } from 'assert'
 import { RawTile, Map, Player } from '../src/tile'
 
-const rawTileMap: RawTile[][] = [
-  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
-]
-
-const rawMonsterMap: RawTile[][] = [
-  [1, 1, 1, 1],
-  [1, 10, 0, 1],
-  [1, 0, 0, 1],
-  [1, 1, 1, 1]
-]
-
-const tileMap = new Map(rawTileMap)
-const tilePlayer = new Player(tileMap)
-
-const monsterMap = new Map(rawMonsterMap)
-const monsterPlayer = new Player(monsterMap)
-
 describe('tiles', () => {
+  const rawMap: RawTile[][] = [
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+  ]
+
+  const map = new Map(rawMap)
+  const player = new Player(map)
+
   it('has air tile', () => {
-    ok(tileMap.getTile(0, 0).isAir())
+    ok(map.isAir(0, 0))
   })
 
   it('has unbreakable tile', () => {
-    ok(tileMap.getTile(1, 0).isUnbreakable())
+    ok(map.isUnbreakable(1, 0))
   })
 
   it('has stone tile', () => {
-    ok(tileMap.getTile(2, 0).isStone())
+    ok(map.isStone(2, 0))
   })
 
   it('has bomb tile', () => {
-    ok(tileMap.getTile(3, 0).isBomb())
+    ok(map.isBomb(3, 0))
   })
 
   it('has bomb close tile', () => {
-    ok(tileMap.getTile(4, 0).isBombClose())
+    ok(map.isBombClose(4, 0))
   })
 
   it('has bomb really close tile', () => {
-    ok(tileMap.getTile(5, 0).isBombReallyClose())
+    ok(map.isBombReallyClose(5, 0))
   })
 
   it('has tmp fire tile', () => {
-    ok(tileMap.getTile(6, 0).isTmpFire())
+    ok(map.isTmpFire(6, 0))
   })
 
   it('has fire tile', () => {
-    ok(tileMap.getTile(7, 0).isFire())
+    ok(map.isFire(7, 0))
   })
 
   it('has extra bomb tile', () => {
-    ok(tileMap.getTile(8, 0).isExtraBomb())
+    ok(map.isExtraBomb(8, 0))
   })
 
   it('has monster up tile', () => {
-    ok(tileMap.getTile(9, 0).isMonsterUp())
+    ok(map.isMonsterUp(9, 0))
   })
 
   it('has monster right tile', () => {
-    ok(tileMap.getTile(10, 0).isMonsterRight())
+    ok(map.isMonsterRight(10, 0))
   })
 
   it('has tmp monster right tile', () => {
-    ok(tileMap.getTile(11, 0).isTmpMonsterRight())
+    ok(map.isTmpMonsterRight(11, 0))
   })
 
   it('has monster down tile', () => {
-    ok(tileMap.getTile(12, 0).isMonsterDown())
+    ok(map.isMonsterDown(12, 0))
   })
 
   it('has tmp monster down tile', () => {
-    ok(tileMap.getTile(13, 0).isTmpMonsterDown())
+    ok(map.isTmpMonsterDown(13, 0))
   })
 
   it('has monster left tile', () => {
-    ok(tileMap.getTile(14, 0).isMonsterLeft())
+    ok(map.isMonsterLeft(14, 0))
   })
-})
 
-describe('player', () => {
   it('initialize player', () => {
-    equal(1, tilePlayer.bombs)
-    equal(1, tilePlayer.x)
-    equal(1, tilePlayer.y)
-    equal(0, tilePlayer.delay)
-    equal(false, tilePlayer.gameOver)
+    equal(1, player.bombs)
+    equal(1, player.x)
+    equal(1, player.y)
+    equal(0, player.delay)
+    equal(false, player.gameOver)
   })
 })
 
 describe('monster', () => {
+  const rawMap: RawTile[][] = [
+    [1, 1, 1, 1],
+    [1, 10, 0, 1],
+    [1, 0, 0, 1],
+    [1, 1, 1, 1]
+  ]
+
+  const map = new Map(rawMap)
+  const player = new Player(map)
+
   it('game over player', () => {
-    monsterPlayer.handleGameOver()
-    ok(monsterPlayer.gameOver)
+    player.handleGameOver()
+    ok(player.gameOver)
   })
 
   it('move monster right', () => {
-    monsterMap.update()
-    monsterMap.update()
-    ok(monsterMap.getTile(2, 1).isMonsterDown())
+    map.update()
+    map.update()
+    ok(map.isMonsterDown(2, 1))
   })
 
   it('move monster down', () => {
-    monsterMap.update()
-    monsterMap.update()
-    ok(monsterMap.getTile(2, 2).isMonsterLeft())
+    map.update()
+    map.update()
+    ok(map.isMonsterLeft(2, 2))
   })
 
   it('move monster left', () => {
-    monsterMap.update()
-    monsterMap.update()
-    ok(monsterMap.getTile(1, 2).isMonsterUp())
+    map.update()
+    map.update()
+    ok(map.isMonsterUp(1, 2))
   })
 
   it('move monster up', () => {
-    monsterMap.update()
-    monsterMap.update()
-    ok(monsterMap.getTile(1, 1).isMonsterRight())
+    map.update()
+    map.update()
+    ok(map.isMonsterRight(1, 1))
+  })
+})
+
+describe('bomb', () => {
+  const rawMap: RawTile[][] = [
+    [1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 1],
+    [1, 1, 1, 1, 1]
+  ]
+
+  const map = new Map(rawMap)
+  const player = new Player(map)
+  player.bombs = 2
+
+  it('move player', () => {
+    player.moveRight()
+    player.moveDown()
+    player.moveDown()
+    equal(2, player.x)
+  })
+
+  it('place first bomb', () => {
+    player.placeBomb()
+    map.update()
+    equal(1, player.bombs)
+  })
+
+  it('place second bomb', () => {
+    player.moveUp()
+    player.placeBomb()
+    map.update()
+    equal(0, player.bombs)
+  })
+
+  it('explode bombs', () => {
+    map.update()
+    map.update()
+    map.update()
+    equal(1, player.bombs)
   })
 })

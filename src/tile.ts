@@ -254,11 +254,11 @@ class BombReallyClose implements Tile {
   move (x: number, y: number): void { }
 
   update (x: number, y: number): void {
-    this.explodeWithFire(x, y - 1)
-    this.explodeWithTmpFire(x, y + 1)
-    this.explodeWithFire(x - 1, y)
-    this.explodeWithTmpFire(x + 1, y)
-    this.explodeWithFire(x, y)
+    this.map.explodeWithFire(x, y - 1, this.player)
+    this.map.explodeWithTmpFire(x, y + 1, this.player)
+    this.map.explodeWithFire(x - 1, y, this.player)
+    this.map.explodeWithTmpFire(x + 1, y, this.player)
+    this.map.explodeWithFire(x, y, this.player)
     this.player.bombs++
   }
 
@@ -266,14 +266,6 @@ class BombReallyClose implements Tile {
 
   explode (x: number, y: number, fire: Tile): void {
     this.map.setTile(x, y, fire)
-  }
-
-  private explodeWithFire (x: number, y: number): void {
-    this.map.getTile(x, y).explode(x, y, new Fire(this.player, this.map))
-  }
-
-  private explodeWithTmpFire (x: number, y: number): void {
-    this.map.getTile(x, y).explode(x, y, new TmpFire(this.player, this.map))
   }
 }
 
@@ -314,7 +306,7 @@ class TmpFire implements Tile {
   }
 }
 
-export class Fire implements Tile {
+class Fire implements Tile {
   constructor (private readonly player: Player, private readonly map: Map) { }
 
   isAir (): boolean { return false }
@@ -429,8 +421,9 @@ class MonsterUp implements Tile {
   move (x: number, y: number): void { }
 
   update (x: number, y: number): void {
-    this.moveRight(x, y)
-    this.moveUp(x, y)
+    const isAir = this.map.isAir(x, y - 1)
+    this.moveRight(x, y, isAir)
+    this.moveUp(x, y, isAir)
   }
 
   placeBomb (): void { }
@@ -439,15 +432,15 @@ class MonsterUp implements Tile {
     this.map.setTile(x, y, fire)
   }
 
-  private moveUp (x: number, y: number): void {
-    if (this.map.getTile(x, y - 1).isAir()) {
+  private moveUp (x: number, y: number, isAir: boolean): void {
+    if (isAir) {
       this.map.setTile(x, y, new Air(this.player, this.map))
       this.map.setTile(x, y - 1, new MonsterUp(this.player, this.map))
     }
   }
 
-  private moveRight (x: number, y: number): void {
-    if (!this.map.getTile(x, y - 1).isAir()) {
+  private moveRight (x: number, y: number, isAir: boolean): void {
+    if (!isAir) {
       this.map.setTile(x, y, new MonsterRight(this.player, this.map))
     }
   }
@@ -481,8 +474,9 @@ class MonsterRight implements Tile {
   move (x: number, y: number): void { }
 
   update (x: number, y: number): void {
-    this.moveDown(x, y)
-    this.moveRight(x, y)
+    const isAir = this.map.isAir(x + 1, y)
+    this.moveDown(x, y, isAir)
+    this.moveRight(x, y, isAir)
   }
 
   placeBomb (): void { }
@@ -491,15 +485,15 @@ class MonsterRight implements Tile {
     this.map.setTile(x, y, fire)
   }
 
-  private moveRight (x: number, y: number): void {
-    if (this.map.getTile(x + 1, y).isAir()) {
+  private moveRight (x: number, y: number, isAir: boolean): void {
+    if (isAir) {
       this.map.setTile(x, y, new Air(this.player, this.map))
       this.map.setTile(x + 1, y, new TmpMonsterRight(this.player, this.map))
     }
   }
 
-  private moveDown (x: number, y: number): void {
-    if (!this.map.getTile(x + 1, y).isAir()) {
+  private moveDown (x: number, y: number, isAir: boolean): void {
+    if (!isAir) {
       this.map.setTile(x, y, new MonsterDown(this.player, this.map))
     }
   }
@@ -570,8 +564,9 @@ class MonsterDown implements Tile {
   move (x: number, y: number): void { }
 
   update (x: number, y: number): void {
-    this.moveLeft(x, y)
-    this.moveDown(x, y)
+    const isAir = this.map.isAir(x, y + 1)
+    this.moveLeft(x, y, isAir)
+    this.moveDown(x, y, isAir)
   }
 
   placeBomb (): void { }
@@ -580,15 +575,15 @@ class MonsterDown implements Tile {
     this.map.setTile(x, y, fire)
   }
 
-  private moveDown (x: number, y: number): void {
-    if (this.map.getTile(x, y + 1).isAir()) {
+  private moveDown (x: number, y: number, isAir: boolean): void {
+    if (isAir) {
       this.map.setTile(x, y, new Air(this.player, this.map))
       this.map.setTile(x, y + 1, new TmpMonsterDown(this.player, this.map))
     }
   }
 
-  private moveLeft (x: number, y: number): void {
-    if (!this.map.getTile(x, y + 1).isAir()) {
+  private moveLeft (x: number, y: number, isAir: boolean): void {
+    if (!isAir) {
       this.map.setTile(x, y, new MonsterLeft(this.player, this.map))
     }
   }
@@ -659,8 +654,9 @@ class MonsterLeft implements Tile {
   move (x: number, y: number): void { }
 
   update (x: number, y: number): void {
-    this.moveUp(x, y)
-    this.moveLeft(x, y)
+    const isAir = this.map.isAir(x - 1, y)
+    this.moveUp(x, y, isAir)
+    this.moveLeft(x, y, isAir)
   }
 
   placeBomb (): void { }
@@ -669,15 +665,15 @@ class MonsterLeft implements Tile {
     this.map.setTile(x, y, fire)
   }
 
-  private moveLeft (x: number, y: number): void {
-    if (this.map.getTile(x - 1, y).isAir()) {
+  private moveLeft (x: number, y: number, isAir: boolean): void {
+    if (isAir) {
       this.map.setTile(x, y, new Air(this.player, this.map))
       this.map.setTile(x - 1, y, new MonsterLeft(this.player, this.map))
     }
   }
 
-  private moveUp (x: number, y: number): void {
-    if (!this.map.getTile(x - 1, y).isAir()) {
+  private moveUp (x: number, y: number, isAir: boolean): void {
+    if (!isAir) {
       this.map.setTile(x, y, new MonsterUp(this.player, this.map))
     }
   }
@@ -699,8 +695,84 @@ export class Map {
     }
   }
 
-  getTile (x: number, y: number): Tile {
-    return this.map[y][x]
+  isAir (x: number, y: number): boolean {
+    return this.map[y][x] instanceof Air
+  }
+
+  isUnbreakable (x: number, y: number): boolean {
+    return this.map[y][x] instanceof Unbreakable
+  }
+
+  isStone (x: number, y: number): boolean {
+    return this.map[y][x] instanceof Stone
+  }
+
+  isBomb (x: number, y: number): boolean {
+    return this.map[y][x] instanceof Bomb
+  }
+
+  isBombClose (x: number, y: number): boolean {
+    return this.map[y][x] instanceof BombClose
+  }
+
+  isBombReallyClose (x: number, y: number): boolean {
+    return this.map[y][x] instanceof BombReallyClose
+  }
+
+  isTmpFire (x: number, y: number): boolean {
+    return this.map[y][x] instanceof TmpFire
+  }
+
+  isFire (x: number, y: number): boolean {
+    return this.map[y][x] instanceof Fire
+  }
+
+  isExtraBomb (x: number, y: number): boolean {
+    return this.map[y][x] instanceof ExtraBomb
+  }
+
+  isMonsterUp (x: number, y: number): boolean {
+    return this.map[y][x] instanceof MonsterUp
+  }
+
+  isMonsterRight (x: number, y: number): boolean {
+    return this.map[y][x] instanceof MonsterRight
+  }
+
+  isTmpMonsterRight (x: number, y: number): boolean {
+    return this.map[y][x] instanceof TmpMonsterRight
+  }
+
+  isMonsterDown (x: number, y: number): boolean {
+    return this.map[y][x] instanceof MonsterDown
+  }
+
+  isTmpMonsterDown (x: number, y: number): boolean {
+    return this.map[y][x] instanceof TmpMonsterDown
+  }
+
+  isMonsterLeft (x: number, y: number): boolean {
+    return this.map[y][x] instanceof MonsterLeft
+  }
+
+  isGameOver (x: number, y: number): boolean {
+    return this.map[y][x].isGameOver()
+  }
+
+  move (playerX: number, playerY: number, x: number, y: number): void {
+    this.map[playerY][playerX].move(x, y)
+  }
+
+  placeBomb (x: number, y: number): void {
+    this.map[y][x].placeBomb()
+  }
+
+  explodeWithFire (x: number, y: number, player: Player): void {
+    this.map[y][x].explode(x, y, new Fire(player, this))
+  }
+
+  explodeWithTmpFire (x: number, y: number, player: Player): void {
+    this.map[y][x].explode(x, y, new TmpFire(player, this))
   }
 
   setTile (x: number, y: number, tile: Tile): void {
@@ -760,24 +832,24 @@ export class Player {
   }
 
   moveUp (): void {
-    this.map.getTile(this.x, this.y - 1).move(0, -1)
+    this.map.move(this.x, this.y - 1, 0, -1)
   }
 
   moveDown (): void {
-    this.map.getTile(this.x, this.y + 1).move(0, 1)
+    this.map.move(this.x, this.y + 1, 0, 1)
   }
 
   moveLeft (): void {
-    this.map.getTile(this.x - 1, this.y).move(-1, 0)
+    this.map.move(this.x - 1, this.y, -1, 0)
   }
 
   moveRight (): void {
-    this.map.getTile(this.x + 1, this.y).move(1, 0)
+    this.map.move(this.x + 1, this.y, 1, 0)
   }
 
   placeBomb (): void {
     if (this.bombs > 0) {
-      this.map.getTile(this.x, this.y).placeBomb()
+      this.map.placeBomb(this.x, this.y)
       this.bombs--
     }
   }
@@ -789,7 +861,7 @@ export class Player {
   }
 
   handleGameOver (): void {
-    if (this.map.getTile(this.x, this.y).isGameOver()) this.gameOver = true
+    if (this.map.isGameOver(this.x, this.y)) this.gameOver = true
   }
 
   draw (g: CanvasRenderingContext2D): void {

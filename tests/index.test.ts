@@ -5,9 +5,6 @@ import {
   update,
   player
 } from '../src/index'
-import {
-  Fire
-} from '../src/tile'
 
 describe('bomb man', () => {
   it('place bomb', () => {
@@ -24,8 +21,8 @@ describe('bomb man', () => {
   })
 
   it('explode bomb', () => {
-    map.getTile(2, 1).explode(2, 1, new Fire(player, map))
-    ok(map.getTile(2, 1).isFire())
+    map.explodeWithFire(2, 1, player)
+    ok(map.isFire(2, 1))
   })
 
   it('handle inputs', () => {
