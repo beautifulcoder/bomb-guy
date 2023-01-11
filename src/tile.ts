@@ -5,24 +5,6 @@ import {
   TPS
 } from './constant.js'
 
-export enum RawTile {
-  AIR,
-  UNBREAKABLE,
-  STONE,
-  BOMB,
-  BOMB_CLOSE,
-  BOMB_REALLY_CLOSE,
-  TMP_FIRE,
-  FIRE,
-  EXTRA_BOMB,
-  MONSTER_UP,
-  MONSTER_RIGHT,
-  TMP_MONSTER_RIGHT,
-  MONSTER_DOWN,
-  TMP_MONSTER_DOWN,
-  MONSTER_LEFT
-}
-
 interface Tile {
   isGameOver: () => boolean
   draw: (g: CanvasRenderingContext2D, x: number, y: number) => void
@@ -439,6 +421,79 @@ class MonsterLeft implements Tile {
   }
 }
 
+export class Player {
+  x = 1
+  y = 1
+
+  delay = 0
+  bombs = 1
+  gameOver = false
+
+  private readonly DELAY = FPS / TPS
+
+  constructor (private readonly map: Map) {
+    this.map.initialize(this)
+  }
+
+  moveUp (): void {
+    this.map.move(this.x, this.y - 1, 0, -1)
+  }
+
+  moveDown (): void {
+    this.map.move(this.x, this.y + 1, 0, 1)
+  }
+
+  moveLeft (): void {
+    this.map.move(this.x - 1, this.y, -1, 0)
+  }
+
+  moveRight (): void {
+    this.map.move(this.x + 1, this.y, 1, 0)
+  }
+
+  placeBomb (): void {
+    if (this.bombs > 0) {
+      this.map.placeBomb(this.x, this.y)
+      this.bombs--
+    }
+  }
+
+  hasDelay (): boolean {
+    if (--this.delay > 0) return true
+    this.delay = this.DELAY
+    return false
+  }
+
+  handleGameOver (): void {
+    if (this.map.isGameOver(this.x, this.y)) this.gameOver = true
+  }
+
+  draw (g: CanvasRenderingContext2D): void {
+    if (!this.gameOver) {
+      g.fillStyle = '#00ff00'
+      g.fillRect(this.x * TILE_SIZE, this.y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+    }
+  }
+}
+
+export enum RawTile {
+  AIR,
+  UNBREAKABLE,
+  STONE,
+  BOMB,
+  BOMB_CLOSE,
+  BOMB_REALLY_CLOSE,
+  TMP_FIRE,
+  FIRE,
+  EXTRA_BOMB,
+  MONSTER_UP,
+  MONSTER_RIGHT,
+  TMP_MONSTER_RIGHT,
+  MONSTER_DOWN,
+  TMP_MONSTER_DOWN,
+  MONSTER_LEFT
+}
+
 export class Map {
   private readonly map: Tile[][]
 
@@ -621,61 +676,6 @@ export class Map {
       case RawTile.TMP_MONSTER_DOWN: return new TmpMonsterDown(player, this)
       case RawTile.MONSTER_LEFT: return new MonsterLeft(player, this)
       default: throwExpression('Unexpected tile')
-    }
-  }
-}
-
-export class Player {
-  x = 1
-  y = 1
-
-  delay = 0
-  bombs = 1
-  gameOver = false
-
-  private readonly DELAY = FPS / TPS
-
-  constructor (private readonly map: Map) {
-    this.map.initialize(this)
-  }
-
-  moveUp (): void {
-    this.map.move(this.x, this.y - 1, 0, -1)
-  }
-
-  moveDown (): void {
-    this.map.move(this.x, this.y + 1, 0, 1)
-  }
-
-  moveLeft (): void {
-    this.map.move(this.x - 1, this.y, -1, 0)
-  }
-
-  moveRight (): void {
-    this.map.move(this.x + 1, this.y, 1, 0)
-  }
-
-  placeBomb (): void {
-    if (this.bombs > 0) {
-      this.map.placeBomb(this.x, this.y)
-      this.bombs--
-    }
-  }
-
-  hasDelay (): boolean {
-    if (--this.delay > 0) return true
-    this.delay = this.DELAY
-    return false
-  }
-
-  handleGameOver (): void {
-    if (this.map.isGameOver(this.x, this.y)) this.gameOver = true
-  }
-
-  draw (g: CanvasRenderingContext2D): void {
-    if (!this.gameOver) {
-      g.fillStyle = '#00ff00'
-      g.fillRect(this.x * TILE_SIZE, this.y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
     }
   }
 }
