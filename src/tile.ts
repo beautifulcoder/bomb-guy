@@ -594,6 +594,14 @@ export class Map {
     this.map[y][x] = new Air(player, this)
   }
 
+  makeUnbreakable (x: number, y: number): void {
+    this.map[y][x] = new Unbreakable()
+  }
+
+  makeStone (x: number, y: number, player: Player): void {
+    this.map[y][x] = new Stone(player, this)
+  }
+
   makeBomb (x: number, y: number, player: Player): void {
     this.map[y][x] = new Bomb(player, this)
   }
@@ -616,6 +624,10 @@ export class Map {
 
   makeFire (x: number, y: number, player: Player): void {
     this.map[y][x] = new Fire(player, this)
+  }
+
+  makeTmpFire (x: number, y: number, player: Player): void {
+    this.map[y][x] = new TmpFire(player, this)
   }
 
   makeMonsterUp (x: number, y: number, player: Player): void {

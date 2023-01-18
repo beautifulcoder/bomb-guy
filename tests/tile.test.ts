@@ -160,3 +160,233 @@ describe('bomb', () => {
     equal(1, player.bombs)
   })
 })
+
+describe('player move', () => {
+  const rawMap: RawTile[][] = [
+    [1, 1, 1, 1],
+    [1, 0, 0, 1],
+    [1, 1, 1, 1]
+  ]
+
+  const map = new Map(rawMap)
+  const player = new Player(map)
+
+  beforeEach(() => {
+    player.x = 1
+    player.y = 1
+  })
+
+  it('into air', () => {
+    map.makeAir(2, 1, player)
+    player.moveRight()
+    equal(2, player.x)
+  })
+
+  it('into unbreakable', () => {
+    map.makeUnbreakable(2, 1)
+    player.moveRight()
+    equal(1, player.x)
+  })
+
+  it('into stone', () => {
+    map.makeStone(2, 1, player)
+    player.moveRight()
+    equal(1, player.x)
+  })
+
+  it('into bomb', () => {
+    map.makeBomb(2, 1, player)
+    player.moveRight()
+    equal(1, player.x)
+  })
+
+  it('into bomb close', () => {
+    map.makeBombClose(2, 1, player)
+    player.moveRight()
+    equal(1, player.x)
+  })
+
+  it('into bomb really close', () => {
+    map.makeBombReallyClose(2, 1, player)
+    player.moveRight()
+    equal(1, player.x)
+  })
+
+  it('into tmp fire', () => {
+    map.makeTmpFire(2, 1, player)
+    player.moveRight()
+    equal(1, player.x)
+  })
+
+  it('into fire', () => {
+    map.makeFire(2, 1, player)
+    player.moveRight()
+    equal(2, player.x)
+  })
+
+  it('into extra bomb', () => {
+    map.makeExtraBomb(2, 1, player)
+    player.moveRight()
+    equal(2, player.x)
+  })
+
+  it('into monster up', () => {
+    map.makeMonsterUp(2, 1, player)
+    player.moveRight()
+    equal(1, player.x)
+  })
+
+  it('into monster right', () => {
+    map.makeMonsterRight(2, 1, player)
+    player.moveRight()
+    equal(1, player.x)
+  })
+
+  it('into tmp monster right', () => {
+    map.makeTmpMonsterRight(2, 1, player)
+    player.moveRight()
+    equal(1, player.x)
+  })
+
+  it('into monster down', () => {
+    map.makeMonsterDown(2, 1, player)
+    player.moveRight()
+    equal(1, player.x)
+  })
+
+  it('into tmp monster down', () => {
+    map.makeTmpMonsterDown(2, 1, player)
+    player.moveRight()
+    equal(1, player.x)
+  })
+
+  it('into monster left', () => {
+    map.makeMonsterLeft(2, 1, player)
+    player.moveRight()
+    equal(1, player.x)
+  })
+})
+
+describe('bomb explode', () => {
+  const rawMap: RawTile[][] = [
+    [1, 1, 1, 1],
+    [1, 0, 0, 1],
+    [1, 1, 1, 1]
+  ]
+
+  const map = new Map(rawMap)
+  const player = new Player(map)
+
+  const explodeBomb = (): void => {
+    for (let i = 0; i < 4; i++) map.update()
+  }
+
+  beforeEach(() => {
+    player.bombs = 1
+  })
+
+  it('into air', () => {
+    map.makeAir(2, 1, player)
+    player.placeBomb()
+    explodeBomb()
+    ok(map.isAir(2, 1))
+  })
+
+  it('into unbreakable', () => {
+    map.makeUnbreakable(2, 1)
+    player.placeBomb()
+    explodeBomb()
+    ok(map.isUnbreakable(2, 1))
+  })
+
+  it('into stone', () => {
+    map.makeStone(2, 1, player)
+    player.placeBomb()
+    explodeBomb()
+    ok(map.isAir(2, 1))
+  })
+
+  it('into bomb', () => {
+    map.makeBomb(2, 1, player)
+    player.placeBomb()
+    explodeBomb()
+    ok(map.isAir(2, 1))
+  })
+
+  it('into bomb close', () => {
+    map.makeBombClose(2, 1, player)
+    player.placeBomb()
+    explodeBomb()
+    ok(map.isAir(2, 1))
+  })
+
+  it('into bomb really close', () => {
+    map.makeBombReallyClose(2, 1, player)
+    player.placeBomb()
+    explodeBomb()
+    ok(map.isAir(2, 1))
+  })
+
+  it('into tmp fire', () => {
+    map.makeTmpFire(2, 1, player)
+    player.placeBomb()
+    explodeBomb()
+    ok(map.isAir(2, 1))
+  })
+
+  it('into fire', () => {
+    map.makeFire(2, 1, player)
+    player.placeBomb()
+    explodeBomb()
+    ok(map.isAir(2, 1))
+  })
+
+  it('into extra bomb', () => {
+    map.makeExtraBomb(2, 1, player)
+    player.placeBomb()
+    explodeBomb()
+    ok(map.isAir(2, 1))
+  })
+
+  it('into monster up', () => {
+    map.makeMonsterUp(2, 1, player)
+    player.placeBomb()
+    explodeBomb()
+    ok(map.isAir(2, 1))
+  })
+
+  it('into monster right', () => {
+    map.makeMonsterRight(2, 1, player)
+    player.placeBomb()
+    explodeBomb()
+    ok(map.isAir(2, 1))
+  })
+
+  it('into tmp monster right', () => {
+    map.makeTmpMonsterRight(2, 1, player)
+    player.placeBomb()
+    explodeBomb()
+    ok(map.isAir(2, 1))
+  })
+
+  it('into monster down', () => {
+    map.makeMonsterDown(2, 1, player)
+    player.placeBomb()
+    explodeBomb()
+    ok(map.isAir(2, 1))
+  })
+
+  it('into tmp monster down', () => {
+    map.makeTmpMonsterDown(2, 1, player)
+    player.placeBomb()
+    explodeBomb()
+    ok(map.isAir(2, 1))
+  })
+
+  it('into monster left', () => {
+    map.makeMonsterLeft(2, 1, player)
+    player.placeBomb()
+    explodeBomb()
+    ok(map.isAir(2, 1))
+  })
+})
